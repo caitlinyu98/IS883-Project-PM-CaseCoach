@@ -1,0 +1,23 @@
+[
+  {"tag": "no_success_metric", "title": "Success metrics",
+   "text": "A strong answer names at least one primary metric tied to the user outcome, says how it is measured, and ideally adds a guardrail metric. Vague goals such as 'improve satisfaction' do not count.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "no_user_segmentation", "title": "User segmentation",
+   "text": "A strong answer identifies who the users are in a B2B setting (buyer, admin, end user) and which segment it prioritizes and why. Treating all users as one group is a gap.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "no_clear_problem_framing", "title": "Problem framing",
+   "text": "A strong answer clarifies the problem before proposing solutions: asks or states assumptions, defines the pain point, and checks the root cause. Jumping straight to features is a gap.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "no_prioritization_rationale", "title": "Prioritization",
+   "text": "A strong answer uses an explicit logic (impact, effort, strategic fit, evidence) to choose among options and says what it would not do. A list of ideas without a choice is a gap.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "no_tradeoffs_or_risks", "title": "Tradeoffs and risks",
+   "text": "A strong answer names what is given up by the chosen path, the main risks, and how it would detect that it is wrong. Presenting the plan as risk free is a gap.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "off_topic", "title": "Staying on topic",
+   "text": "The answer must address the question asked. An answer about a different problem, or generic career talk that never touches the scenario, is off topic.",
+   "source": "Team starter rubric, to be rewritten by the team"},
+  {"tag": "empty_or_too_short", "title": "Minimum substance",
+   "text": "An empty answer or one with only a few words cannot be assessed and counts as too short.",
+   "source": "Team starter rubric, to be rewritten by the team"}
+]
