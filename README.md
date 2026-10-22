@@ -69,14 +69,14 @@ Members:
 
 | Task | Owner | End date |
 | --- | --- | --- |
-| Build tool calling, such as a rubric lookup by tag, and wire it into feedback | [OWNER] | [DATE] |
-| Write the 20 row test set with planted weaknesses recorded in advance | [OWNER] | [DATE] |
-| Fix the request cap so Start over does not reset it, and count embedding and retry calls | [OWNER] | [DATE] |
-| Add a retry button for a failed report, and a clear missing key message | [OWNER] | [DATE] |
-| Pin `requirements.txt` and test a cold start | [OWNER] | [DATE] |
-| Replace starter content, rewrite rubric snippets, put real owner names in file headers | [OWNER] | [DATE] |
-| Measure token cost per interaction for the cost analysis | [OWNER] | [DATE] |
-| Architecture diagram, kept in step with the code | [OWNER] | [DATE] |
+| Build tool calling (rubric lookup by tag) and wire it into feedback | Max | Oct 30 |
+| Measure token cost per interaction for the cost analysis | Max | Nov 4 |
+| Fix the request cap so Start over does not reset it, and count embedding and retry calls | Caitlin | Oct 28 |
+| Add a retry button for a failed report, and a clear missing key message | Caitlin | Oct 28 |
+| Rewrite the 7 rubric snippets, replace starter content, put real owner names in file headers | Jimena | Oct 28 |
+| Pin `requirements.txt` and test a cold start | Jimena | Oct 25 |
+| Write the 20 row test set with planted weaknesses recorded in advance | Jacobo | Oct 30 |
+| Architecture diagram, kept in step with the code | Jacobo | Oct 25 |
 
 These rows must match the cards on the project board.
 
