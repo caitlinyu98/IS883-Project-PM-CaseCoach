@@ -1,13 +1,20 @@
 ## Workshop checkpoint
 
 Team name: Team 7, PM CaseCoach
-Members: [FULL NAME 1 (Caitlin)], [FULL NAME 2 (Jimena)], [FULL NAME 3 (Max)], [FULL NAME 4 (Jacobo)]
 
-### 0. Logistics
+Members:
 
+* Jimena Gamboa, [jgamboa@bu.edu](mailto:jgamboa@bu.edu)
+* Max Lattermann, [mlatterm@bu.edu](mailto:mlatterm@bu.edu)
+* Jacobo Naranjo Guerrero, [jacobon@bu.edu](mailto:jacobon@bu.edu)
+* Caitlin Yu, [caitliny@bu.edu](mailto:caitliny@bu.edu)
+
+### 0. Team infrastructure
+
+* GitHub repository: https://github.com/caitlinyu98/IS883-Project-PM-CaseCoach
+* Project board (GitHub Projects, §5.7): https://github.com/users/caitlinyu98/projects/1
+* Streamlit app URL: https://is883-project-pm-casecoach.streamlit.app/
 * Attending the Oct 23 workshop? [yes / no]
-* Project board link: [PASTE GITHUB PROJECTS URL]
-* Streamlit app URL: https://is883-project-pm-casecoach.streamlit.app
 
 ### 1. The project, as it stands today
 
