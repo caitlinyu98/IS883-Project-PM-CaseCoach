@@ -35,22 +35,22 @@ Members:
 
 ### 3. Where the build stands
 
-**What a user can do on the deployed app today:** [CONFIRM against the live URL. If the live app is still the placeholder, write that plainly and say the working version is on the `starter-scaffold` branch.]
+**What a user can do on the deployed app today:** We have an MVP in main and are working to make it run. The intended flow is a four-question typed interview with adaptive follow-ups and a final feedback report. A working end-to-end session on the deployed URL has not yet been confirmed.
 
 **Capabilities from §5.1:**
 
 | Capability | Where it fires | Status |
 | --- | --- | --- |
 | Structured output | Follow up and feedback steps ask the model for JSON. Our code parses it, validates fields, and drops tags that are not on the allowed list. Parse failures use a fallback question or one retry. | Working. Known gap: no fixed response schema yet, so types can slip through. |
-| Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow up questions do not use retrieval yet. |
+| Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow-up questions do not use retrieval yet. |
 | Tool calling | A function the model chooses to call, such as a rubric lookup by weakness tag, whose result changes the feedback. | Not started. |
 
-**Architecture diagram sketch:** [COMMIT AN IMAGE, for example `docs/architecture_v0.png`, AND LINK IT HERE. It should show input, each stage, where the model is called, where each capability fires, and the failure path.]
+**Architecture diagram sketch:** `docs/architecture-diagram.png`
 
 ### 4. Success metric
 
 * **The one number:** Weakness tag recall. Of the weaknesses we deliberately plant in test answers, the share that the feedback report tags correctly. It is computed by `eval/run_eval.py`, not judged by eye.
-* **Where the test inputs will come from:** At least 20 realistic PM case answers, written or collected by team members and classmates who consent to this use. They include awkward ones: very short answers, off topic answers, and confident but flawed answers.
+* **Where the test inputs will come from:** At least 20 realistic PM case answers, written or collected by team members and classmates who consent to this use. They include awkward ones: very short answers, off-topic answers, and confident but flawed answers. For these "awkward" ones, we may rely on AI-generated answers.
 * **How expected results are recorded:** The planted weaknesses for each answer are written into `eval/test_set.csv` before any run, so correctness is never decided after seeing the output.
 
 ### 5. Proof of concept: two test inputs
