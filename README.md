@@ -30,12 +30,12 @@ Members:
 ### 2. What changed since the proposal
 
 * **What we changed:** [JIMENA: state what changed in what we build or how, and why. Write "none" if nothing.]
-  * Current state worth recording: a working scaffold exists on the `starter-scaffold` branch (PR #1) and is not yet merged into `main`. It has the interview loop, JSON structured output with validation, a first version of retrieval over the rubric snippets, a prompt version variable, and a basic request cap.
+  * Current state worth recording: the working scaffold from PR #1 was merged into `main` on Oct 22. It has the interview loop, JSON structured output with validation, a first version of retrieval over the rubric snippets, a prompt version variable, and a basic request cap.
 * **What the proposal feedback asked for, and what we did:** [JIMENA: paste the feedback points and our response to each.]
 
 ### 3. Where the build stands
 
-**What a user can do on the deployed app today:** [CONFIRM against the live URL. If the live app is still the placeholder, write that plainly and say the working version is on the `starter-scaffold` branch.]
+**What a user can do on the deployed app today:** The app deploys from `main`, which now runs the interview flow: the student answers 4 fixed B2B PM questions, gets up to 3 adaptive follow ups, and receives a structured feedback report with weakness tags. Live model calls depend on the Gemini key being set in Streamlit secrets as `GEMINI_API_KEY`; we are confirming this before the workshop.
 
 **Capabilities from §5.1:**
 
