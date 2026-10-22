@@ -36,6 +36,7 @@ Members:
   * It also asked to acknowledge that if our test users are real people we need written consent on their personal data management, so we plan to make them sign a clear consent (what data is stored, why, and which third parties would have access to it) when they test our product.
   * It also asked for a real scope cut, so we decided to replace the company-type selector with a four fixed question set for B2B companies and fixed follow-ups per question.
   * It also asked to change our success metric, so we followed your suggestion and decided to set our success metric as the % of planted weaknesses the app identifies, using a set of 20 answers written by our team, each with a different planted weakness. We will also add a quick set of knowledge or satisfaction questions at the end of each session as a secondary metric, to capture something our main metric can’t: whether the app is actually useful to the user.
+  * We also updated the proof of concept by adding a test set-up and the division of the plan for the presentation. 
 
 ### 3. Where the build stands
 
@@ -59,34 +60,38 @@ Members:
 
 ### 5. Proof of concept: two test inputs
 
-Both inputs answer question 1 in `prompts.py`: "You are the PM for a B2B SaaS tool used by finance teams to approve invoices. Customers say approvals take too long. How would you approach this?" Each is run in a full four question session with the other answers held constant.
+**Test setup:** Both cases answer the first question in `prompts.py`: "You are the PM for a B2B SaaS tool used by finance teams to approve invoices. Customers say approvals take too long. How would you approach this?" Expected weakness tags below are written before running, not observed results. Each answer is tested in a full four question session, with the remaining answers held constant, before comparing final reports.
 
-**Input A, an ordinary input.**
-* Input: I would first establish where the delay occurs: incomplete invoice data, unclear ownership, or too many approval handoffs. I would segment customers by company size and approval complexity, then interview accounts-payable managers and approvers while reviewing timestamps from each workflow stage. If handoffs are the main bottleneck, I would pilot automated reminders and escalation rules with mid-market customers before investing in a full workflow redesign. That is lower effort than replacing the approval system and preserves current audit trails. I would compare the pilot with the current process before expanding it.
-* Expected result, written before running: The interviewer should ask which specific KPI and baseline would show whether the pilot worked. The report should tag no_success_metric (the answer promises a comparison but never defines a measurable outcome, such as median invoice approval time), recognise the sound diagnosis, segmentation, and phased rollout, and not invent other weaknesses.
-* What the app returned: [not run yet. Fill after running.]
+**Input A, ordinary candidate answer:** I would first establish where the delay occurs: incomplete invoice data, unclear ownership, or too many approval handoffs. I would segment customers by company size and approval complexity, then interview accounts payable managers and approvers while reviewing timestamps from each workflow stage. If handoffs are the main bottleneck, I would pilot automated reminders and escalation rules with mid market customers before investing in a full workflow redesign. That is lower effort than replacing the approval system and preserves current audit trails. I would compare the pilot with the current process before expanding it.
 
-**Input B, an input we expect it to get wrong.**
-* Input: I would remove manual approvals for all invoices under $50,000 and roll the change out to every enterprise customer in the next release. Our north-star target would be 90% of invoices approved within 24 hours. This is the obvious solution because humans cause the delay, so I would skip customer interviews and a pilot. If approval speed improves, I would consider the launch a success even without checking how the change affects financial controls, auditability, or fraudulent payments.
-* Expected result, written before running: The follow up should challenge the assumption that removing approvals improves the product and ask about control or fraud risk. The report should tag no_tradeoffs_or_risks, no_clear_problem_framing, and no_user_segmentation. Likely failure: the model over-rewards the concrete 90% / 24 hour target and gives an overly positive assessment of a dangerous recommendation.
-* What the app returned: [not run yet. Fill after running.]
+**Expected A, written before running:** The follow up should ask which specific KPI and baseline would show whether the pilot worked. The final report should flag no_success_metric (the answer promises a comparison but never defines a measurable outcome, such as median invoice approval time). It should recognize the sound diagnosis, segmentation and phased rollout, and not invent extra weaknesses.
+
+**Returned A:** Not run yet.
+
+**Input B, confident but flawed answer (expected to fail):** I would remove manual approvals for all invoices under $50,000 and roll the change out to every enterprise customer in the next release. Our north star target would be 90% of invoices approved within 24 hours. This is the obvious solution because humans cause the delay, so I would skip customer interviews and a pilot. If approval speed improves, I would consider the launch a success even without checking how the change affects financial controls, auditability, or fraudulent payments.
+
+**Expected B, written before running:** The follow up should challenge the assumption that removing approvals improves the product and ask about control or fraud risk. The final report should flag no_tradeoffs_or_risks (missing controls and unintended consequences), no_clear_problem_framing (solution chosen before diagnosing the root cause) and no_user_segmentation (blanket rollout). Likely failure: the model over rewards the concrete 90% / 24 hour target and gives an overly positive assessment despite a dangerous recommendation.
+
+**Returned B:** Not run yet.
 
 ### 6. The plan to our presentation
 
-| Task | Owner | End date |
-| --- | --- | --- |
-| Build tool calling (rubric lookup by tag) and wire it into feedback | Max | Oct 30 |
-| Measure token cost per interaction for the cost analysis | Max | Nov 4 |
-| Fix the request cap so Start over does not reset it, and count embedding and retry calls | Caitlin | Oct 28 |
-| Add a retry button for a failed report, and a clear missing key message | Caitlin | Oct 28 |
-| Rewrite the 7 rubric snippets, replace starter content, put real owner names in file headers | Jimena | Oct 28 |
-| Pin `requirements.txt` and test a cold start | Jimena | Oct 25 |
-| Write the 20 row test set with planted weaknesses recorded in advance | Jacobo | Oct 30 |
-| Architecture diagram, kept in step with the code | Jacobo | Oct 25 |
+**Build priority:** A credible, measurable, text only B2B PM interview by the Nov 9 presentation. Feedback quality and a reliable end to end flow come before feature breadth.
 
-These rows must match the cards on the project board.
+**Left to build (owners match the project board):**
 
-**What we cut first if behind:** Retrieval for follow up questions. We keep retrieval in the feedback step only.
+* **Tool calling: Max, by Oct 30.** A model invoked rubric lookup (`lookup_rubric_by_tag`) whose returned evidence changes the feedback. Ordinary Python retrieval does not count as tool calling.
+* **20 row test set with expected results: Jacobo, by Oct 28.** Answers and independently labeled expected tags committed to `eval/test_set.csv` before any scoring run.
+* **Request cap fix so Start over does not reset it: Caitlin, by Oct 26.** Move the quota counter outside the resettable interview state; regression test consecutive sessions.
+* **Retry button for a failed report: Caitlin, by Oct 26.** Keep the transcript after a formatting failure; every retry counts against the cap.
+* **Pin requirements.txt and test a cold start: Caitlin, by Oct 27.** Confirm the deployed URL loads after a clean Streamlit Cloud restart with the rubric file included.
+* **Replace starter content, owner names and rubric snippets: Jimena (content), Max (integration), by Oct 29.** Final questions, prompts and rubric snippets, with provenance and permission documented; confirm retrieval grounds the final report.
+* **Cost analysis from measured token counts: Max, by Nov 3.** Measured generation and embedding tokens per full mock interview, converted to cost, with free tier limits noted.
+* **End to end QA and demo rehearsal: Jacobo (QA), full team (demo), by Nov 6.** Run Inputs A and B plus the full test set, check tags and failure paths, confirm one clean live session, rehearse the demo.
+
+**Cut first if behind:** Reduce follow ups from three to one, asked only after the first question, in line with the scope cut in section 2 (fixed follow ups per question). We keep the four question text interview, the final feedback report with retrieval, the locked evaluation, the working deployment and all three required capabilities.
+
+**Not building:** Voice, company type or role modes, user profiles, or retrieval for follow up questions.
 
 ### 7. What we need from you
 
