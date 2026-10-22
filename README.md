@@ -45,7 +45,8 @@ Members:
 | Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow-up questions do not use retrieval yet. |
 | Tool calling | A function the model chooses to call, such as a rubric lookup by weakness tag, whose result changes the feedback. | Not started. |
 
-**Architecture diagram sketch:** `docs/architecture-diagram.png`
+**Architecture diagram sketch:** ![Architecture Diagram](docs/architecture-diagram.jpg)
+`docs/architecture-diagram.png`
 
 ### 4. Success metric
 
