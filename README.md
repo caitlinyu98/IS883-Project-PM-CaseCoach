@@ -14,7 +14,7 @@ Members:
 * GitHub repository: https://github.com/caitlinyu98/IS883-Project-PM-CaseCoach
 * Project board (GitHub Projects, §5.7): https://github.com/users/caitlinyu98/projects/1
 * Streamlit app URL: https://is883-project-pm-casecoach.streamlit.app/
-* Attending the Oct 23 workshop? [yes / no]
+* Attending the Oct 23 workshop? Yes
 
 ### 1. The project, as it stands today
 
@@ -56,8 +56,8 @@ Members:
 ### 5. Proof of concept: two test inputs
 
 **Input A, an ordinary input.**
-* Input: A full paragraph answer to a standard product case, for example "How would you improve a food delivery app's order tracking?", that gives a goal and users but offers no success metrics and no prioritisation.
-* Expected result, written before running: The report should tag the missing success metrics and missing prioritisation, should not invent other weaknesses, and should show rubric guidance for those two tags. [MATCH TAG NAMES TO `sources/rubrics.json`.]
+* Input: A full paragraph answer to question 1 ("You are the PM for a B2B SaaS tool used by finance teams to approve invoices. Customers say approvals take too long. How would you approach this?") that frames the problem and names the users but gives no success metric and no prioritisation logic.
+* Expected result, written before running: The report should tag `no_success_metric` and `no_prioritization_rationale`, should not invent other weaknesses, and should show rubric guidance for those two tags.
 * What the app returned: [not run yet. Fill after running.]
 
 **Input B, an input we expect it to get wrong.**
