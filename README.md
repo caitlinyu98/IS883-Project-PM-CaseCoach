@@ -9,6 +9,8 @@ Members:
 * Jacobo Naranjo Guerrero, [jacobon@bu.edu](mailto:jacobon@bu.edu)
 * Caitlin Yu, [caitliny@bu.edu](mailto:caitliny@bu.edu)
 
+## Workshop checkpoint
+
 ### 0. Team infrastructure
 
 * GitHub repository: https://github.com/caitlinyu98/IS883-Project-PM-CaseCoach
