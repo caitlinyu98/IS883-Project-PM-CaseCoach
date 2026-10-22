@@ -78,8 +78,10 @@ elif S.phase == "ready":
             try:
                 S.result = generate_report(S.transcript)
                 st.rerun()
-            except LLMError:
+            except LLMError as e:
                 st.error("The model service is unavailable right now. Please try again in a minute.")
+                st.caption(f"Debug: {e}")
+                print("LLMError:", repr(e))
 
 else:
     idx = S.q_idx
@@ -103,8 +105,10 @@ else:
             if use_request():
                 try:
                     r = generate_followup(q, ans)
-                except LLMError:
+                except LLMError as e:
                     st.error("The model service is unavailable right now. Please try again in a minute.")
+                    st.caption(f"Debug: {e}")
+                    print("LLMError:", repr(e))
                 else:
                     if not r["in_scope"]:
                         st.warning("That does not look like an answer to this question. Please try again.")
