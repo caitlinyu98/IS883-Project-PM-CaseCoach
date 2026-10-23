@@ -23,8 +23,8 @@ Members:
 * **The user's input, and what comes back to the user:** The candidate types answers to four B2B PM written case questions and adaptive follow-ups. The intended output is a final structured report with strengths, weakness tags, and actionable suggestions.
 * **Every source the app reads (§3.2):**
   * Lenny’s Data: https://github.com/LennysNewsletter/lennys-newsletterpodcastdata and evidence of permitted use as a free subscriber with [jgamboa@bu.edu](mailto:jgamboa@bu.edu) of Lenny’s Substack Newsletter https://prnt.sc/qf_vdsza8EKz
-  * 5 job postings for current PM roles which are publicly shared in each company’s linkedin or web pages: https://drive.google.com/drive/folders/19T9uIWG9JZUat56vrQfVPImY9JGVpvjz?usp=drive_link
-  * Original questions and rubrics written by our team based on linkedin experts information about interview’s structures supported by AI assistance (in process)
+  * 5 job postings for current PM roles which are publicly shared in each company’s LinkedIn or web pages: https://drive.google.com/drive/folders/19T9uIWG9JZUat56vrQfVPImY9JGVpvjz?usp=drive_link
+  * Original questions and rubrics written by our team based on LinkedIn experts information about interview structures supported by AI assistance (in process)
   * The Gemini API free tier, used only as the language model.
 
 ### 2. What changed since the proposal
@@ -34,8 +34,8 @@ Members:
   * It said to back up our sources, which we did in the sources section.
   * It also asked to specify whether job descriptions were pasted by the user or collected by us and from where, so we made sure to include this information in the sources section as well.
   * It also asked to acknowledge that if our test users are real people we need written consent on their personal data management, so we plan to make them sign a clear consent (what data is stored, why, and which third parties would have access to it) when they test our product.
-  * It also asked for a real scope cut, so we decided to replace the company-type selector with a four fixed question set for B2B companies and fixed follow-ups per question.
-  * It also asked to change our success metric, so we followed your suggestion and decided to set our success metric as the % of planted weaknesses the app identifies, using a set of 20 answers written by our team, each with a different planted weakness. We will also add a quick set of knowledge or satisfaction questions at the end of each session as a secondary metric, to capture something our main metric can’t: whether the app is actually useful to the user.
+  * It also asked for a real scope cut, so we decided to replace the company-type selector with a fixed set of four B2B questions and a capped number of adaptive follow-ups per question.
+  * It also asked to change our success metric, so we followed your suggestion and decided to set our success metric as the % of planted weaknesses the app identifies, using a set of 8 answers written by our team, each with one or more planted weaknesses. We will also add a quick set of knowledge or satisfaction questions at the end of each session as a secondary metric, to capture something our main metric can’t: whether the app is actually useful to the user.
   * We also updated the proof of concept by adding a test set-up and the division of the plan for the presentation. 
 
 ### 3. Where the build stands
@@ -47,7 +47,7 @@ Members:
 | Capability | Where it fires | Status |
 | --- | --- | --- |
 | Structured output | Follow up and feedback steps ask the model for JSON. Our code parses it, validates fields, and drops tags that are not on the allowed list. Parse failures use a fallback question or one retry. | Working. Known gap: no fixed response schema yet, so types can slip through. |
-| Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow-up questions do not use retrieval yet. |
+| Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow-up questions do not use retrieval (out of scope, see section 6). |
 | Tool calling | A function the model chooses to call, such as a rubric lookup by weakness tag, whose result changes the feedback. | Not started. |
 
 **Architecture diagram sketch:** ![Architecture Diagram](docs/architecture-diagram.jpg)
@@ -55,8 +55,9 @@ Members:
 ### 4. Success metric
 
 * **The one number:** Weakness tag recall. Of the weaknesses we deliberately plant in test answers, the share that the feedback report tags correctly. It is computed by `eval/run_eval.py`, not judged by eye.
-* **Where the test inputs will come from:** At least 20 realistic PM case answers, written or collected by team members and classmates who consent to this use. They include awkward ones: very short answers, off-topic answers, and confident but flawed answers. For these "awkward" ones, we may rely on AI-generated answers.
+* **Where the test inputs will come from:** 8 realistic PM case answers, written by our team. They include awkward ones: very short answers, off-topic answers, and confident but flawed answers. Some answers carry more than one planted weakness, so recall is computed over all planted tags, not over answers.
 * **How expected results are recorded:** The planted weaknesses for each answer are written into `eval/test_set.csv` before any run, so correctness is never decided after seeing the output.
+* **Secondary metric:** A short set of knowledge or satisfaction questions at the end of each session, to capture whether the app is actually useful to the user.
 
 ### 5. Proof of concept: two test inputs
 
@@ -81,7 +82,7 @@ Members:
 **Left to build (owners match the project board):**
 
 * **Tool calling: Max, by Oct 30.** A model invoked rubric lookup (`lookup_rubric_by_tag`) whose returned evidence changes the feedback. Ordinary Python retrieval does not count as tool calling.
-* **20 row test set with expected results: Jacobo, by Oct 28.** Answers and independently labeled expected tags committed to `eval/test_set.csv` before any scoring run.
+* **8 row test set with expected results: Jacobo, by Oct 28.** Answers and independently labeled expected tags, drawn from the allowed tag list, committed to `eval/test_set.csv` before any scoring run.
 * **Request cap fix so Start over does not reset it: Caitlin, by Oct 26.** Move the quota counter outside the resettable interview state; regression test consecutive sessions.
 * **Retry button for a failed report: Caitlin, by Oct 26.** Keep the transcript after a formatting failure; every retry counts against the cap.
 * **Pin requirements.txt and test a cold start: Caitlin, by Oct 27.** Confirm the deployed URL loads after a clean Streamlit Cloud restart with the rubric file included.
@@ -89,10 +90,12 @@ Members:
 * **Cost analysis from measured token counts: Max, by Nov 3.** Measured generation and embedding tokens per full mock interview, converted to cost, with free tier limits noted.
 * **End to end QA and demo rehearsal: Jacobo (QA), full team (demo), by Nov 6.** Run Inputs A and B plus the full test set, check tags and failure paths, confirm one clean live session, rehearse the demo.
 
-**Cut first if behind:** Reduce follow ups from three to one, asked only after the first question, in line with the scope cut in section 2 (fixed follow ups per question). We keep the four question text interview, the final feedback report with retrieval, the locked evaluation, the working deployment and all three required capabilities.
+**Cut first if behind:** Reduce follow ups from three to one, asked only after the first question, in line with the scope cut in section 2 (capped follow ups per question). We keep the four question text interview, the final feedback report with retrieval, the locked evaluation, the working deployment and all three required capabilities.
 
 **Not building:** Voice, company type or role modes, user profiles, or retrieval for follow up questions.
 
 ### 7. What we need from you
 
 We plan to measure the share of planted weaknesses the final report tags correctly. Is that an appropriate primary metric for useful PM interview feedback, and how should we account for false positive tags so the app cannot score well by flagging everything? Related: are weakness labels written by our own team an acceptable ground truth, or do we need a second labeller?
+
+We are currently on the Gemini API free tier. Can we switch to a different model provider (for example OpenAI or Anthropic) if we cover the cost, or if course credits are available? Free tier rate limits and inconsistent JSON output are a risk for both our evaluation runs and a reliable live demo.
