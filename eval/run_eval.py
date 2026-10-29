@@ -12,7 +12,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from feedback import generate_report  # noqa: E402
-from prompts import QUESTIONS  # noqa: E402
+from question_bank import BY_ID  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--csv", default=os.path.join(os.path.dirname(__file__), "test_set.csv"))
@@ -30,7 +30,7 @@ hits = planted_total = extra = predicted_total = parsed = 0
 out = []
 for r in rows:
     planted = {t for t in r["planted_weaknesses"].split("|") if t}
-    transcript = [{"question": QUESTIONS[int(r["question_index"])], "answer": r["answer"]}]
+    transcript = [{"question": BY_ID[r["question_id"]]["question"], "answer": r["answer"]}]
     try:
         res = generate_report(transcript, version=args.version, use_retrieval=not args.no_retrieval)
         report = res["report"]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "q01",
+    "type": "product_design",
+    "question": "Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool.",
+    "strong_answer_includes": "clarifies scope and goal; segments managers vs owners vs kitchen staff; picks one pain point and justifies it; proposes a concrete solution; defines a success metric like % waste reduced; names a tradeoff or risk"
+  },
+  {
+    "id": "q02",
+    "type": "metrics",
+    "question": "You are the PM for a B2B invoicing product. How would you measure whether the product is successful?",
+    "strong_answer_includes": "states the product goal first; picks one north-star metric; adds 2-3 supporting metrics and 1 guardrail metric; separates the buyer (finance lead) from the user (accountant); explains how each metric is measured"
+  },
+  {
+    "id": "q03",
+    "type": "product_design",
+    "question": "You are the PM for a B2B SaaS tool used by finance teams to approve invoices. Customers say approvals take too long. How would you approach this?",
+    "strong_answer_includes": "STARTER, Jimena to review: finds where the delay happens before proposing a fix; segments customers by size or approval complexity; uses workflow data and interviews; proposes a phased fix such as reminders or escalation; defines a metric like median approval time; protects audit and fraud controls"
+  },
+  {
+    "id": "q04",
+    "type": "metrics",
+    "question": "Your company is launching a new onboarding flow for an enterprise analytics product. How would you define and measure success?",
+    "strong_answer_includes": "STARTER, Jimena to review: states the onboarding goal; picks one activation metric; adds time to first value and a guardrail metric; separates admins who set up from end users; says how and over what period it is measured"
+  },
+  {
+    "id": "q05",
+    "type": "prioritization",
+    "question": "Your team can build only one of three things this quarter: SSO, usage dashboards, or a Slack integration. Sales wants SSO, support wants dashboards, and customers keep asking for Slack. How do you decide?",
+    "strong_answer_includes": "STARTER, Jimena to review: names explicit criteria such as revenue impact, effort and strategic fit; uses evidence from each stakeholder; makes one clear choice; says what is not built and how to communicate it"
+  },
+  {
+    "id": "q06",
+    "type": "strategy",
+    "question": "A large customer threatens to churn unless you build a custom feature that does not fit your roadmap. What do you do?",
+    "strong_answer_includes": "STARTER, Jimena to review: sizes the account against the cost of the feature; finds the need behind the request; checks whether other customers share it; weighs roadmap and precedent risk; proposes options short of a custom build"
+  }
+]

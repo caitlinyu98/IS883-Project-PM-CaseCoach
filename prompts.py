@@ -1,23 +1,13 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # STARTER CONTENT: the team must review and rewrite the questions and prompts so they are yours.
-# --- Caitlin: fixed B2B question set and versioned prompts (change name to the real owner) ---
+# --- Caitlin: versioned prompts (change name to the real owner) ---
 
 ACTIVE_VERSION = "v1"
 
-# Scope cut: no company type selector. One fixed B2B question set, one role level.
-QUESTIONS = [
-    "You are the PM for a B2B SaaS tool used by finance teams to approve invoices. "
-    "Customers say approvals take too long. How would you approach this?",
-    "Your company is launching a new onboarding flow for an enterprise analytics product. "
-    "How would you define and measure success?",
-    "Your team can build only one of three things this quarter: SSO, usage dashboards, or a Slack "
-    "integration. Sales wants SSO, support wants dashboards, and customers keep asking for Slack. "
-    "How do you decide?",
-    "A large customer threatens to churn unless you build a custom feature that does not fit your "
-    "roadmap. What do you do?",
-]
+# Scope cut: no company type selector, one role level.
+# The interview questions live in data/questions.json (see question_bank.py).
 
-# Follow ups are asked after questions 1 to 3 (3 adaptive follow ups total, matching the proposal).
+# Follow ups are asked after interview questions 1 to 3 (3 adaptive follow ups total, matching the proposal).
 FOLLOWUP_AFTER = {0, 1, 2}
 
 FALLBACK_FOLLOWUP = "What is the biggest assumption in your answer, and how would you test it?"
