@@ -80,7 +80,6 @@ elif S.phase == "ready":
                 st.rerun()
             except LLMError as e:
                 st.error("The model service is unavailable right now. Please try again in a minute.")
-                st.caption(f"Debug: {e}")
                 print("LLMError:", repr(e))
 
 else:
@@ -107,7 +106,6 @@ else:
                     r = generate_followup(q, ans)
                 except LLMError as e:
                     st.error("The model service is unavailable right now. Please try again in a minute.")
-                    st.caption(f"Debug: {e}")
                     print("LLMError:", repr(e))
                 else:
                     if not r["in_scope"]:

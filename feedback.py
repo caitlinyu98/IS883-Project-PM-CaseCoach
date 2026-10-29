@@ -1,8 +1,10 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
+from pydantic import ValidationError
 from llm import generate_json, ParseError, LLMError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
 from retrieval import retrieve
+from schemas import FeedbackReport
 
 MIN_WORDS = 5  # fewer total words than this is handled by a rule, not the model
 
@@ -35,25 +37,13 @@ def _answers_only(transcript):
 
 
 def validate_report(r):
-    """Deterministic check. Returns (ok, cleaned_report). Unknown tags are dropped."""
-    if not isinstance(r, dict):
+    """Deterministic check: does the model's JSON fit FeedbackReport (schemas.py)?
+    Returns (ok, cleaned_report). A tag outside the 7 allowed tags fails validation."""
+    try:
+        report = FeedbackReport.model_validate(r)
+    except ValidationError:
         return False, None
-    if not isinstance(r.get("overall_summary"), str):
-        return False, None
-    if not isinstance(r.get("strengths"), list) or not isinstance(r.get("next_steps"), list):
-        return False, None
-    if not isinstance(r.get("weaknesses"), list):
-        return False, None
-    clean = []
-    for w in r["weaknesses"]:
-        if isinstance(w, dict) and w.get("tag") in TAXONOMY:
-            clean.append({"tag": w["tag"], "evidence": str(w.get("evidence", "")), "fix": str(w.get("fix", ""))})
-    return True, {
-        "overall_summary": r["overall_summary"],
-        "strengths": [str(s) for s in r["strengths"]],
-        "weaknesses": clean,
-        "next_steps": [str(s) for s in r["next_steps"]],
-    }
+    return True, report.model_dump()
 
 
 def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
@@ -93,7 +83,7 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     # CAPABILITY: structured prompting (versioned system prompt) + structured output (JSON, validated).
     for _ in range(2):  # one retry if the output does not parse or validate
         try:
-            data = generate_json(FEEDBACK_PROMPTS[version], user)
+            data = generate_json(FEEDBACK_PROMPTS[version], user, schema=FeedbackReport)
         except ParseError:
             continue
         ok, clean = validate_report(data)
