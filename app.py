@@ -2,9 +2,9 @@
 # AI-assisted starter code (Claude, Anthropic). Review and edit before committing.
 #
 # This is the only file Streamlit runs. It calls everything else:
-#   prompts.py  -> what the models are told
-#   tools.py    -> functions the interviewer model can call (uses retrieval.py)
-#   schemas.py  -> the shape the feedback report must come back in
+# prompts.py -> what the models are told
+# tools.py -> functions the interviewer model can call (uses retrieval.py)
+# schemas.py -> the shape the feedback report must come back in
 #
 # Failure paths handled here: empty input, API errors (one retry), bad JSON
 # (one retry, then a friendly error), the usage cap, and spinners while waiting.
@@ -50,7 +50,8 @@ def send(text):
             resp = ss.chat.send_message(text)
             ss.token_log.append(("interviewer", resp.usage_metadata.total_token_count))
             return resp.text
-        except Exception:
+        except Exception as e:
+            st.caption(f"Debug: {type(e).__name__}: {e}")  # remove before submitting
             if attempt == 0:
                 st.info("The model did not answer. Retrying once...")
                 time.sleep(2)
@@ -75,9 +76,9 @@ def get_feedback(transcript):
             report.overall_score = min(max(report.overall_score, 1), 5)
             return report
         except ValidationError:
-            continue          # bad JSON: try once more
+            continue  # bad JSON: try once more
         except Exception:
-            time.sleep(2)     # API error: wait and retry
+            time.sleep(2)  # API error: wait and retry
     return None
 
 
