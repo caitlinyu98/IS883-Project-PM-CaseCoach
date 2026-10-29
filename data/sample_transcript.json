@@ -1,0 +1,7 @@
+[
+  ["assistant", "Thanks for joining. Let's start. Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool."],
+  ["user", "I would build an AI dashboard that shows managers everything about their inventory in real time, with alerts when products are about to expire. It would be really useful and managers would love it."],
+  ["assistant", "Who specifically would use this dashboard, and how would you know if it worked?"],
+  ["user", "Mostly managers. I think it would work because people want less waste."],
+  ["assistant", "That's the end of the interview."]
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "q01",
+    "type": "product_design",
+    "question": "Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool.",
+    "strong_answer_includes": "clarifies scope and goal; segments managers vs owners vs kitchen staff; picks one pain point and justifies it; proposes a concrete solution; defines a success metric like % waste reduced; names a tradeoff or risk"
+  },
+  {
+    "id": "q02",
+    "type": "metrics",
+    "question": "You are the PM for a B2B invoicing product. How would you measure whether the product is successful?",
+    "strong_answer_includes": "states the product goal first; picks one north-star metric; adds 2-3 supporting metrics and 1 guardrail metric; separates the buyer (finance lead) from the user (accountant); explains how each metric is measured"
+  }
+]
