@@ -7,7 +7,7 @@
 # The tag names are the 7 tags fixed in our workshop checkpoint; eval/run_eval.py scores against them.
 
 from typing import Literal
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 Tag = Literal[
     "no_success_metric",
@@ -27,6 +27,7 @@ class Weakness(BaseModel):
 
 
 class FeedbackReport(BaseModel):
+    overall_score: int = Field(description="Overall answer quality, integer 1 to 5")
     overall_summary: str
     strengths: list[str]
     weaknesses: list[Weakness]
