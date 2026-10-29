@@ -29,7 +29,7 @@ st.caption("Practice a B2B SaaS PM interview. Questions and feedback are generat
 # ---- setup once per browser session ----
 ss = st.session_state
 if "client" not in ss:
-    ss.client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+    ss.client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"], http_options=types.HttpOptions(timeout=60_000))
     ss.messages, ss.tool_log, ss.token_log = [], [], []
     ss.requests, ss.started, ss.finished = 0, False, False
 
@@ -51,7 +51,7 @@ def send(text):
             ss.token_log.append(("interviewer", resp.usage_metadata.total_token_count))
             return resp.text
         except Exception as e:
-            st.caption(f"Debug: {type(e).__name__}: {e}")  # remove before submitting
+            print(f"[interviewer] send_message failed: {e!r}", flush=True); st.caption(f"Debug: {type(e).__name__}: {e}")  # remove before submitting
             if attempt == 0:
                 st.info("The model did not answer. Retrying once...")
                 time.sleep(2)
@@ -77,8 +77,8 @@ def get_feedback(transcript):
             return report
         except ValidationError:
             continue  # bad JSON: try once more
-        except Exception:
-            time.sleep(2)  # API error: wait and retry
+        except Exception as e:
+            print(f"[feedback] generate_content failed: {e!r}", flush=True); time.sleep(2)  # API error: wait and retry
     return None
 
 
