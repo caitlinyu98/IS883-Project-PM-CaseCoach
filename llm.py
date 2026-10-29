@@ -6,7 +6,7 @@ from google import genai
 from google.genai import types
 
 # Verify in Google AI Studio which models your free tier allows, then edit these two lines.
-GEN_MODEL = "gemini-3.8-flash"
+GEN_MODEL = "gemini-3.5-flash-lite"
 EMBED_MODEL = "gemini-embedding-001"
 
 
