@@ -4,7 +4,7 @@
 # Every setting the app uses lives here, so a change only happens in one place.
 # Copy the exact model names your Session 3 class notebook uses.
 
-CHAT_MODEL = "gemini-2.5-flash"        # replace with the class model if different
+CHAT_MODEL = "gemini-3.8-flash"        # replace with the class model if different
 EMBED_MODEL = "gemini-embedding-001"   # replace with the class embedding model if different
 
 MAX_REQUESTS_PER_SESSION = 30   # usage cap required by directives §3.2
