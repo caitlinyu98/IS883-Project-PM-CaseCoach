@@ -18,6 +18,15 @@ TAXONOMY = {
     "empty_or_too_short": "Empty or too short to assess",
 }
 
+SCORE_RUBRIC = (
+    "OVERALL SCORE: set overall_score to an integer from 1 to 5.\n"
+    "1 = vague, no structure, no metric, no users named\n"
+    "2 = some structure but misses most of: problem framing, users, metric, tradeoffs\n"
+    "3 = covers about half of: problem framing, users, metric, tradeoffs\n"
+    "4 = covers all four with minor gaps\n"
+    "5 = covers all four with specific, quantified, well prioritized reasoning"
+)
+
 
 def transcript_to_text(transcript):
     parts = []
@@ -41,9 +50,12 @@ def validate_report(r):
     Returns (ok, cleaned_report). A tag outside the 7 allowed tags fails validation."""
     try:
         report = FeedbackReport.model_validate(r)
-    except ValidationError:
+    except ValidationError as e:
+        print(f"[feedback] report failed validation: {e!r}", flush=True)
         return False, None
-    return True, report.model_dump()
+    clean = report.model_dump()
+    clean["overall_score"] = min(max(int(clean.get("overall_score", 1)), 1), 5)  # keep it in 1 to 5
+    return True, clean
 
 
 def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
@@ -54,6 +66,7 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     if len(_answers_only(transcript).split()) < MIN_WORDS:
         meta["rule_based"] = True
         report = {
+            "overall_score": 1,
             "overall_summary": "There was not enough of an answer to assess.",
             "strengths": [],
             "weaknesses": [{"tag": "empty_or_too_short", "evidence": "The answer was empty or only a few words.",
@@ -72,11 +85,13 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
             rubric_block = "\n".join(f"- [{h['tag']}] {h['title']}: {h['text']}" for h in hits)
             meta["retrieval_used"] = True
             meta["retrieved_tags"] = [h["tag"] for h in hits]
-        except LLMError:
+        except LLMError as e:
+            print(f"[feedback] retrieval failed: {e!r}", flush=True)
             meta["retrieval_failed"] = True  # continue without retrieval, but record it
 
     allowed = "\n".join(f"- {k}: {v}" for k, v in TAXONOMY.items())
     user = (f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\n"
+            f"{SCORE_RUBRIC}\n\n"
             f"RUBRIC EXCERPTS:\n{rubric_block or '(none)'}\n\n"
             f"TRANSCRIPT:\n{text}")
 
@@ -84,7 +99,8 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     for _ in range(2):  # one retry if the output does not parse or validate
         try:
             data = generate_json(FEEDBACK_PROMPTS[version], user, schema=FeedbackReport)
-        except ParseError:
+        except ParseError as e:
+            print(f"[feedback] JSON parse failed: {e!r}", flush=True)
             continue
         ok, clean = validate_report(data)
         if ok:
