@@ -73,6 +73,31 @@ def generate_json(system, user, temperature=0.3, schema=None):
     return parse_json(text)
 
 
+def generate_with_tools(system, user, tools, temperature=0.3):
+    """Return Gemini's function-call requests without executing them automatically."""
+    try:
+        resp = _get_client().models.generate_content(
+            model=GEN_MODEL,
+            contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                temperature=temperature,
+                tools=tools,
+                tool_config=types.ToolConfig(
+                    function_calling_config=types.FunctionCallingConfig(mode="ANY")
+                ),
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                    disable=True
+                ),
+            ),
+        )
+        return resp.function_calls or []
+    except LLMError:
+        raise
+    except Exception as e:
+        raise LLMError(str(e)) from e
+
+
 def embed(texts):
     try:
         resp = _get_client().models.embed_content(model=EMBED_MODEL, contents=texts)

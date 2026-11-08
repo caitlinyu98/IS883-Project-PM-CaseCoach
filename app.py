@@ -40,11 +40,11 @@ def reset_interview():
         S[k] = [] if isinstance(v, list) else v
 
 
-def use_request():
-    if S.requests >= MAX_REQUESTS:
+def use_request(count=1):
+    if S.requests + count > MAX_REQUESTS:
         st.error("You reached the practice limit for this session. Please come back later.")
         return False
-    S.requests += 1
+    S.requests += count
     return True
 
 
@@ -186,7 +186,7 @@ for role, text in S.messages:
 # ---- the feedback report ----
 if S.started and S.phase == "ready":
     if S.result is None:
-        if st.button("Get my feedback report", type="primary") and use_request():
+        if st.button("Get my feedback report", type="primary") and use_request(2):
             with st.spinner("Writing your feedback report..."):
                 try:
                     S.result = generate_report(S.transcript)
@@ -197,6 +197,10 @@ if S.started and S.phase == "ready":
                 m = S.result["meta"]
                 S.log.append(f"report: parse_ok={m['parse_ok']}, rule_based={m['rule_based']}, "
                              f"retrieval_used={m['retrieval_used']}, retrieved_tags={m['retrieved_tags']}")
+                for call in m["tool_calls"]:
+                    S.log.append(
+                        f"tool: {call['name']}({call['argument']}) -> {call['result_id']}"
+                    )
                 st.rerun()
     elif S.result["report"] is None:
         st.error("The feedback could not be formatted this time. Your answers are saved.")

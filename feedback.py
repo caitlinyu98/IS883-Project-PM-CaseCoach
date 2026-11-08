@@ -1,10 +1,10 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
 from pydantic import ValidationError
-from llm import generate_json, ParseError, LLMError
+from llm import generate_json, generate_with_tools, ParseError, LLMError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
-from retrieval import retrieve
 from schemas import FeedbackReport
+from tools import create_lookup_rubric_tool
 
 MIN_WORDS = 5  # fewer total words than this is handled by a rule, not the model
 
@@ -60,7 +60,13 @@ def validate_report(r):
 
 def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     """Returns {"report": dict or None, "meta": {...}}. Raises LLMError on API failure."""
-    meta = {"parse_ok": True, "retrieval_used": False, "retrieved_tags": [], "rule_based": False}
+    meta = {
+        "parse_ok": True,
+        "retrieval_used": False,
+        "retrieved_tags": [],
+        "tool_calls": [],
+        "rule_based": False,
+    }
 
     # Rule, not model: an empty or tiny answer needs no language model.
     if len(_answers_only(transcript).split()) < MIN_WORDS:
@@ -77,22 +83,46 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
 
     text = transcript_to_text(transcript)
 
-    # CAPABILITY: retrieval. Rubric snippets closest to the answers are injected into the prompt.
+    # The model selects a rubric tag and invokes the lookup before feedback is generated.
     rubric_block = ""
     if use_retrieval:
+        tool_calls = meta["tool_calls"]
+        tool_results = []
+        lookup_tool = create_lookup_rubric_tool(tool_calls, tool_results)
+        tool_system = (
+            "You are evaluating a product manager interview answer. Choose the single "
+            "most relevant weakness tag based on the transcript, then call "
+            "lookup_rubric_by_tag exactly once. Do not assess the answer or provide "
+            "feedback; the rubric will be used in a separate feedback step."
+        )
+        allowed = "\n".join(f"- {tag}: {description}" for tag, description in TAXONOMY.items())
+        tool_user = f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\nTRANSCRIPT:\n{text}"
+        function_calls = generate_with_tools(tool_system, tool_user, [lookup_tool])
+        if len(function_calls) != 1:
+            raise LLMError("The model must invoke lookup_rubric_by_tag exactly once.")
+        function_call = function_calls[0]
+        if function_call.name != "lookup_rubric_by_tag":
+            raise LLMError(f"The model requested an unexpected tool: {function_call.name}.")
+        arguments = function_call.args or {}
+        tag = arguments.get("tag")
+        if not isinstance(tag, str):
+            raise LLMError("The rubric lookup tool call did not include a string tag.")
         try:
-            hits = retrieve(_answers_only(transcript), k=3)
-            rubric_block = "\n".join(f"- [{h['tag']}] {h['title']}: {h['text']}" for h in hits)
-            meta["retrieval_used"] = True
-            meta["retrieved_tags"] = [h["tag"] for h in hits]
-        except LLMError as e:
-            print(f"[feedback] retrieval failed: {e!r}", flush=True)
-            meta["retrieval_failed"] = True  # continue without retrieval, but record it
+            lookup_tool(tag)
+        except (OSError, ValueError, KeyError) as e:
+            raise LLMError(f"Rubric lookup failed: {e}") from e
+        rubric = tool_results[0]
+        rubric_block = f"- [{rubric['tag']}] {rubric['title']}: {rubric['text']}"
+        meta["retrieval_used"] = True
+        meta["retrieved_tags"] = [rubric["tag"]]
 
     allowed = "\n".join(f"- {k}: {v}" for k, v in TAXONOMY.items())
     user = (f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\n"
             f"{SCORE_RUBRIC}\n\n"
-            f"RUBRIC EXCERPTS:\n{rubric_block or '(none)'}\n\n"
+            f"RUBRIC TOOL EVIDENCE:\n{rubric_block or '(not requested)'}\n\n"
+            f"Use the returned rubric evidence as the evaluation standard for its tag. "
+            f"Only report the weakness if the transcript supports it; make the feedback "
+            f"and fix specific to the rubric criterion.\n\n"
             f"TRANSCRIPT:\n{text}")
 
     # CAPABILITY: structured prompting (versioned system prompt) + structured output (JSON, validated).

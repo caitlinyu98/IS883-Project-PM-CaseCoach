@@ -79,9 +79,9 @@ Members:
 
 **Build priority:** A credible, measurable, text only B2B PM interview by the Nov 9 presentation. Feedback quality and a reliable end to end flow come before feature breadth.
 
-**Left to build (owners match the project board):**
+**Project checklist (owners match the project board):**
 
-* **Tool calling: Max, by Oct 30.** A model invoked rubric lookup (`lookup_rubric_by_tag`) whose returned evidence changes the feedback. Ordinary Python retrieval does not count as tool calling.
+* **Tool calling (implemented).** The feedback flow uses a model-invoked `lookup_rubric_by_tag` in `tools.py`; its returned rubric evidence is supplied to the structured feedback generation. Ordinary Python retrieval does not count as tool calling.
 * **8 row test set with expected results: Jacobo, by Oct 28.** Answers and independently labeled expected tags, drawn from the allowed tag list, committed to `eval/test_set.csv` before any scoring run.
 * **Request cap fix so Start over does not reset it: Caitlin, by Oct 26.** Move the quota counter outside the resettable interview state; regression test consecutive sessions.
 * **Retry button for a failed report: Caitlin, by Oct 26.** Keep the transcript after a formatting failure; every retry counts against the cap.
