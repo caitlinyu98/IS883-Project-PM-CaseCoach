@@ -8,7 +8,7 @@ ACTIVE_VERSION = "v1"
 # The interview questions live in data/questions.json (see question_bank.py).
 
 # Follow ups are asked after interview questions 1 to 3 (3 adaptive follow ups total, matching the proposal).
-FOLLOWUP_AFTER = {0, 1, 2}
+FOLLOWUP_AFTER = {0, 1, 2, 3}
 
 FALLBACK_FOLLOWUP = "What is the biggest assumption in your answer, and how would you test it?"
 
