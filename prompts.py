@@ -7,7 +7,7 @@ ACTIVE_VERSION = "v1"
 # Scope cut: no company type selector, one role level.
 # The interview questions live in data/questions.json (see question_bank.py).
 
-# Follow ups are asked after interview questions 1 to 3 (3 adaptive follow ups total, matching the proposal).
+# Follow ups are asked after all four interview questions.
 FOLLOWUP_AFTER = {0, 1, 2, 3}
 
 FALLBACK_FOLLOWUP = "What is the biggest assumption in your answer, and how would you test it?"
