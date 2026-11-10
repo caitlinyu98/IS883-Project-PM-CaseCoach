@@ -47,8 +47,10 @@ Members:
 | Capability | Where it fires | Status |
 | --- | --- | --- |
 | Structured output | Follow up and feedback steps ask the model for JSON. Our code parses it, validates fields, and drops tags that are not on the allowed list. Parse failures use a fallback question or one retry. | Working. Known gap: no fixed response schema yet, so types can slip through. |
-| Retrieval | Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report. | In progress. Only 7 draft snippets, and follow-up questions do not use retrieval (out of scope, see section 6). |
-| Tool calling | A function the model chooses to call, such as a rubric lookup by weakness tag, whose result changes the feedback. | Not started. |
+| ~~Retrieval~~ | ~~Rubric snippets are embedded. The closest three to the student's answers are added to the feedback prompt, so they change the report.~~ | ~~In progress. Only 7 draft snippets, and follow-up questions do not use retrieval (out of scope, see section 6).~~ |
+| ~~Tool calling~~ | ~~A function the model chooses to call, such as a rubric lookup by weakness tag, whose result changes the feedback.~~ | ~~Not started.~~ |
+
+**Changes on Nov 10:** The evaluation now supports three rubric-evidence modes: no retrieval, Gemini tool calling, or embedding similarity. Tool calling remains the default workflow in the app; set `CASECOACH_RETRIEVAL_MODE=embedding` or `CASECOACH_RETRIEVAL_MODE=none` before starting the app to switch modes. Follow-up questions still do not use retrieval.
 
 **Architecture diagram sketch:** ![Architecture Diagram](docs/architecture-diagram.jpg)
 
@@ -58,6 +60,18 @@ Members:
 * **Where the test inputs will come from:** 8 realistic PM case answers, written by our team. They include awkward ones: very short answers, off-topic answers, and confident but flawed answers. Some answers carry more than one planted weakness, so recall is computed over all planted tags, not over answers.
 * **How expected results are recorded:** The planted weaknesses for each answer are written into `eval/test_set.csv` before any run, so correctness is never decided after seeing the output.
 * **Secondary metric:** A short set of knowledge or satisfaction questions at the end of each session, to capture whether the app is actually useful to the user.
+
+**Changes on Nov 10:** `eval/run_eval.py` supports `--retrieval-mode none`, `tool`, or `embedding`. Each run writes a separate `eval/results_v1_<mode>.json` file and reports recall, precision, and F1 over the planted weakness tags. Tool and embedding modes each supply one weakness rubric to the same feedback prompt, making the comparison focus on how that rubric is selected. Embedding mode restricts candidates to the same weakness-tag taxonomy used by tool calling. The evaluation CLI's `--retrieval-mode` selects the mode for the run.
+
+Run all test rows for each condition (set `GEMINI_API_KEY` first; this makes Gemini API calls):
+
+```bash
+python eval/run_eval.py --limit 0 --retrieval-mode none
+python eval/run_eval.py --limit 0 --retrieval-mode tool
+python eval/run_eval.py --limit 0 --retrieval-mode embedding
+```
+
+For a quick smoke test, use `--limit 2`. The default is `--retrieval-mode tool` and `--limit 2`. Keep the model, prompt version, CSV, and row limit the same across runs. Model output can vary, so consider repeating each condition; results files are overwritten when rerunning the same mode.
 
 ### 5. Proof of concept: two test inputs
 

@@ -1,5 +1,7 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
+import os
+
 from pydantic import ValidationError
 from llm import generate_json, generate_with_tools, ParseError, LLMError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
@@ -7,6 +9,7 @@ from schemas import FeedbackReport
 from tools import create_lookup_rubric_tool
 
 MIN_WORDS = 5  # fewer total words than this is handled by a rule, not the model
+DEFAULT_RETRIEVAL_MODE = os.environ.get("CASECOACH_RETRIEVAL_MODE", "tool")
 
 TAXONOMY = {
     "no_success_metric": "No concrete success metric or way to measure it",
@@ -58,11 +61,17 @@ def validate_report(r):
     return True, clean
 
 
-def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
+def generate_report(
+    transcript, version=ACTIVE_VERSION, retrieval_mode=DEFAULT_RETRIEVAL_MODE
+):
     """Returns {"report": dict or None, "meta": {...}}. Raises LLMError on API failure."""
+    if retrieval_mode not in {"none", "tool", "embedding"}:
+        raise ValueError(f"Unknown retrieval mode: {retrieval_mode}")
+
     meta = {
         "parse_ok": True,
         "retrieval_used": False,
+        "retrieval_mode": retrieval_mode,
         "retrieved_tags": [],
         "tool_calls": [],
         "rule_based": False,
@@ -83,9 +92,9 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
 
     text = transcript_to_text(transcript)
 
-    # The model selects a rubric tag and invokes the lookup before feedback is generated.
     rubric_block = ""
-    if use_retrieval:
+    if retrieval_mode == "tool":
+        # The model selects a rubric tag and invokes the lookup before feedback is generated.
         tool_calls = meta["tool_calls"]
         tool_results = []
         lookup_tool = create_lookup_rubric_tool(tool_calls, tool_results)
@@ -115,11 +124,21 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
         rubric_block = f"- [{rubric['tag']}] {rubric['title']}: {rubric['text']}"
         meta["retrieval_used"] = True
         meta["retrieved_tags"] = [rubric["tag"]]
+    elif retrieval_mode == "embedding":
+        from retrieval import retrieve
+
+        rubrics = retrieve(text, k=1, allowed_tags=set(TAXONOMY))
+        rubric_block = "\n".join(
+            f"- [{rubric['tag']}] {rubric['title']}: {rubric['text']}"
+            for rubric in rubrics
+        )
+        meta["retrieval_used"] = bool(rubrics)
+        meta["retrieved_tags"] = [rubric["tag"] for rubric in rubrics]
 
     allowed = "\n".join(f"- {k}: {v}" for k, v in TAXONOMY.items())
     user = (f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\n"
             f"{SCORE_RUBRIC}\n\n"
-            f"RUBRIC TOOL EVIDENCE:\n{rubric_block or '(not requested)'}\n\n"
+            f"RETRIEVED RUBRIC EVIDENCE:\n{rubric_block or '(not requested)'}\n\n"
             f"Use the returned rubric evidence as the evaluation standard for its tag. "
             f"Only report the weakness if the transcript supports it; make the feedback "
             f"and fix specific to the rubric criterion.\n\n"

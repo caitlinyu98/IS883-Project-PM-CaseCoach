@@ -20,11 +20,14 @@ def _build_index():
     return _index
 
 
-def retrieve(query, k=3):
-    """Return the k rubric snippets closest to the query. Raises LLMError if embeddings fail."""
+def retrieve(query, k=3, allowed_tags=None):
+    """Return the k rubric snippets closest to the query, optionally restricted by tag."""
     items, vecs = _build_index()
     q = np.array(embed([query])[0], dtype=float)
     q = q / np.linalg.norm(q)
     scores = vecs @ q
-    top = np.argsort(-scores)[:k]
+    candidates = np.arange(len(items))
+    if allowed_tags is not None:
+        candidates = np.array([i for i, item in enumerate(items) if item["tag"] in allowed_tags])
+    top = candidates[np.argsort(-scores[candidates])[:k]]
     return [dict(items[i], score=float(scores[i])) for i in top]

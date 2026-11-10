@@ -1,8 +1,9 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: eval harness, metric = % planted weaknesses identified (change name to the real owner) ---
 # Usage (set GEMINI_API_KEY in your terminal first):
-#   python eval/run_eval.py --limit 2                 # develop on 2 rows
-#   python eval/run_eval.py --limit 0 --no-retrieval  # full set, retrieval off
+#   python eval/run_eval.py --limit 2 --retrieval-mode tool
+#   python eval/run_eval.py --limit 0 --retrieval-mode embedding
+#   python eval/run_eval.py --limit 0 --retrieval-mode none
 import argparse
 import csv
 import json
@@ -17,12 +18,18 @@ from question_bank import BY_ID  # noqa: E402
 ap = argparse.ArgumentParser()
 ap.add_argument("--csv", default=os.path.join(os.path.dirname(__file__), "test_set.csv"))
 ap.add_argument("--version", default="v1")
-ap.add_argument("--no-retrieval", action="store_true")
+ap.add_argument(
+    "--retrieval-mode",
+    choices=("none", "tool", "embedding"),
+    default="tool",
+    help="rubric evidence strategy (default: tool)",
+)
 ap.add_argument("--limit", type=int, default=2, help="0 means all rows")
 ap.add_argument("--sleep", type=float, default=4.0, help="seconds between calls (free tier rate limit)")
 args = ap.parse_args()
 
-rows = list(csv.DictReader(open(args.csv, encoding="utf-8")))
+with open(args.csv, encoding="utf-8", newline="") as csv_file:
+    rows = list(csv.DictReader(csv_file))
 if args.limit:
     rows = rows[: args.limit]
 
@@ -32,7 +39,9 @@ for r in rows:
     planted = {t for t in r["planted_weaknesses"].split("|") if t}
     transcript = [{"question": BY_ID[r["question_id"]]["question"], "answer": r["answer"]}]
     try:
-        res = generate_report(transcript, version=args.version, use_retrieval=not args.no_retrieval)
+        res = generate_report(
+            transcript, version=args.version, retrieval_mode=args.retrieval_mode
+        )
         report = res["report"]
     except Exception as e:  # API error counts as a failed row, not a crash
         print(r["id"], "API error:", e)
@@ -52,6 +61,8 @@ print(f"PRIMARY  % planted weaknesses identified: {hits}/{planted_total}"
       f" = {100 * hits / planted_total:.1f}%" if planted_total else "no planted weaknesses in set")
 print(f"SECONDARY  precision (guards against tagging everything): {hits}/{predicted_total}"
       f" = {100 * hits / predicted_total:.1f}%" if predicted_total else "no tags predicted")
-tag = f"{args.version}_{'noret' if args.no_retrieval else 'ret'}"
+f1 = 2 * hits / (planted_total + predicted_total) if planted_total + predicted_total else 0
+print(f"F1  {f1:.3f}")
+tag = f"{args.version}_{args.retrieval_mode}"
 with open(os.path.join(os.path.dirname(__file__), f"results_{tag}.json"), "w") as f:
     json.dump(out, f, indent=2)  # ids and tags only, no answer text
