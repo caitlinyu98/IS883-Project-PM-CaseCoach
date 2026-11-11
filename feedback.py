@@ -1,7 +1,7 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
 from pydantic import ValidationError
-from llm import generate_json, generate_with_tools, ParseError, LLMError
+from llm import generate_json, run_tool_turn, ParseError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
 from schemas import FeedbackReport
 from tools import create_lookup_rubric_tool
@@ -83,52 +83,27 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
 
     text = transcript_to_text(transcript)
 
-    # The model selects a rubric tag and invokes the lookup before feedback is generated.
-    rubric_block = ""
-    if use_retrieval:
-        tool_calls = meta["tool_calls"]
-        tool_results = []
-        lookup_tool = create_lookup_rubric_tool(tool_calls, tool_results)
-        tool_system = (
-            "You are evaluating a product manager interview answer. Choose the single "
-            "most relevant weakness tag based on the transcript, then call "
-            "lookup_rubric_by_tag exactly once. Do not assess the answer or provide "
-            "feedback; the rubric will be used in a separate feedback step."
-        )
-        allowed = "\n".join(f"- {tag}: {description}" for tag, description in TAXONOMY.items())
-        tool_user = f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\nTRANSCRIPT:\n{text}"
-        function_calls = generate_with_tools(tool_system, tool_user, [lookup_tool])
-        if len(function_calls) != 1:
-            raise LLMError("The model must invoke lookup_rubric_by_tag exactly once.")
-        function_call = function_calls[0]
-        if function_call.name != "lookup_rubric_by_tag":
-            raise LLMError(f"The model requested an unexpected tool: {function_call.name}.")
-        arguments = function_call.args or {}
-        tag = arguments.get("tag")
-        if not isinstance(tag, str):
-            raise LLMError("The rubric lookup tool call did not include a string tag.")
-        try:
-            lookup_tool(tag)
-        except (OSError, ValueError, KeyError) as e:
-            raise LLMError(f"Rubric lookup failed: {e}") from e
-        rubric = tool_results[0]
-        rubric_block = f"- [{rubric['tag']}] {rubric['title']}: {rubric['text']}"
-        meta["retrieval_used"] = True
-        meta["retrieved_tags"] = [rubric["tag"]]
-
+    system = FEEDBACK_PROMPTS[version]  # CAPABILITY: structured prompting (versioned system prompt)
     allowed = "\n".join(f"- {k}: {v}" for k, v in TAXONOMY.items())
     user = (f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\n"
             f"{SCORE_RUBRIC}\n\n"
-            f"RUBRIC TOOL EVIDENCE:\n{rubric_block or '(not requested)'}\n\n"
-            f"Use the returned rubric evidence as the evaluation standard for its tag. "
-            f"Only report the weakness if the transcript supports it; make the feedback "
-            f"and fix specific to the rubric criterion.\n\n"
             f"TRANSCRIPT:\n{text}")
 
-    # CAPABILITY: structured prompting (versioned system prompt) + structured output (JSON, validated).
+    # --- Caitlin: one conversation for the report (written with Claude Code as coding assistant) ---
+    # CAPABILITY: tool calling. Turn 1: the model decides which rubrics to look up, if any. Each rubric
+    # goes back into the same conversation as the tool's reply, so turn 2 writes the report with it.
+    conversation = user  # with the tool switched off (eval --no-retrieval) the report is written from the prompt alone
+    if use_retrieval:
+        tool_results = []
+        lookup_tool = create_lookup_rubric_tool(meta["tool_calls"], tool_results)
+        conversation = run_tool_turn(system, user, [lookup_tool])
+        meta["retrieval_used"] = bool(tool_results)
+        meta["retrieved_tags"] = [r["tag"] for r in tool_results]
+
+    # CAPABILITY: structured output (JSON constrained to FeedbackReport, then validated). Turn 2.
     for _ in range(2):  # one retry if the output does not parse or validate
         try:
-            data = generate_json(FEEDBACK_PROMPTS[version], user, schema=FeedbackReport)
+            data = generate_json(system, conversation, schema=FeedbackReport)
         except ParseError as e:
             print(f"[feedback] JSON parse failed: {e!r}", flush=True)
             continue
