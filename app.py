@@ -1,8 +1,4 @@
-# Layout ported from starter-scaffold: chat bubbles, sidebar controls, demo transcript,
-# and a (temporary) behind the scenes panel. The interview itself is controlled by this
-# code, not by the model: up to 4 questions from data/questions.json, a follow up after
-# the first 3, then one structured feedback report.
-#
+
 # Failure paths: empty or too short answer (rule, no model call), off topic answer
 # (model sets in_scope = false), API error (friendly message), report that does not
 # parse (retry button), and the per session request cap.
@@ -16,7 +12,7 @@ from interviewer import generate_followup
 from feedback import generate_report, MIN_WORDS, TAXONOMY
 from llm import LLMError
 
-MAX_REQUESTS = 12   # model calls per browser session (directives §3.2); Start over does not reset it
+MAX_REQUESTS = 15   # model calls per browser session (directives §3.2); Start over reloads the session, which resets it
 NUM_QUESTIONS = 4
 DEMO_PATH = os.path.join(os.path.dirname(__file__), "data", "sample_transcript.json")
 API_DOWN = "The model service is unavailable right now. Please try again in a minute."
@@ -33,7 +29,7 @@ INTERVIEW_DEFAULTS = {"started": False, "demo": False, "questions": [], "q_idx":
                       "transcript": [], "messages": [], "result": None, "log": []}
 for k, v in INTERVIEW_DEFAULTS.items():
     S.setdefault(k, [] if isinstance(v, list) else v)
-S.setdefault("requests", 0)  # kept outside INTERVIEW_DEFAULTS so Start over cannot reset the cap
+S.setdefault("requests", 0)  # model calls used; cleared with everything else when Start over reloads the session
 
 
 def reset_interview():
@@ -186,8 +182,12 @@ def show_report(res):
 with st.sidebar:
     st.selectbox("Company type", ["B2B SaaS"], disabled=True)
     st.selectbox("Role level", ["MBA PM intern"], disabled=True)
+    # --- Caitlin: Start over reloads the whole session (written with Claude Code as coding assistant) ---
     if st.button("Start over" if S.started else "Start interview", type="primary", use_container_width=True):
-        start_interview()
+        if S.started:
+            S.clear()  # wipe the interview and the model call counter; the rerun rebuilds a fresh session
+        else:
+            start_interview()
         st.rerun()
     can_end = S.started and S.phase in ("answer", "followup") and len(S.transcript) > 0
     if st.button("End interview and get feedback", disabled=not can_end, use_container_width=True):
