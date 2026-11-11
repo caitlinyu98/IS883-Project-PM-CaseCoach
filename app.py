@@ -1,5 +1,5 @@
 # Layout ported from starter-scaffold: chat bubbles, sidebar controls, demo transcript,
-# and a (temporary) behind the scenes panel. The interview itself is controlled by this
+# and a behind the scenes panel. The interview itself is controlled by this
 # code, not by the model: up to 4 questions from data/questions.json, a follow up after
 # the first 3, then one structured feedback report.
 #
@@ -110,13 +110,21 @@ def handle_answer(ans):
     q = S.questions[S.q_idx]
     if not use_request():
         return
-    with st.spinner("The interviewer is reading your answer..."):
+    with st.status("Contacting Gemini...", expanded=True) as model_status:
         try:
-            r = generate_followup(q["question"], ans)
+            r = generate_followup(
+                q["question"],
+                ans,
+                on_model_status=lambda message: model_status.update(
+                    label=message, state="running", expanded=True
+                ),
+            )
         except LLMError as e:
             print("LLMError:", repr(e))  # real error goes to the logs, the user sees a friendly message
+            model_status.update(state="error", expanded=True)
             st.error(API_DOWN)
             return
+        model_status.update(state="complete", expanded=False)
     S.log.append(f"follow up for {q['id']}: in_scope={r['in_scope']}, fallback_used={r['fallback_used']}")
     if not r["in_scope"]:
         st.warning("That does not look like an answer to this question. Please try again.")
@@ -172,8 +180,8 @@ with st.sidebar:
         load_demo()
         st.rerun()
     st.caption(f"Model calls used this session: {S.requests} of {MAX_REQUESTS}")
-    # TEMPORARY: shows where the model calls fire, for development and the Q&A demo. Remove or keep before the tag.
-    with st.expander("Behind the scenes (temporary)"):
+    # Shows where the model calls fire, for development and the Q&A demo. Remove or keep before the tag.
+    with st.expander("Behind the Scenes"):
         st.write(S.log or "Nothing yet.")
 
 # ---- the conversation ----
@@ -187,12 +195,20 @@ for role, text in S.messages:
 if S.started and S.phase == "ready":
     if S.result is None:
         if st.button("Get my feedback report", type="primary") and use_request(2):
-            with st.spinner("Writing your feedback report..."):
+            with st.status("Preparing your feedback report...", expanded=True) as model_status:
                 try:
-                    S.result = generate_report(S.transcript)
+                    S.result = generate_report(
+                        S.transcript,
+                        on_model_status=lambda message: model_status.update(
+                            label=message, state="running", expanded=True
+                        ),
+                    )
                 except LLMError as e:
                     print("LLMError:", repr(e))
+                    model_status.update(state="error", expanded=True)
                     st.error(API_DOWN)
+                else:
+                    model_status.update(state="complete", expanded=False)
             if S.result is not None:
                 m = S.result["meta"]
                 S.log.append(f"report: parse_ok={m['parse_ok']}, rule_based={m['rule_based']}, "

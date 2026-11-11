@@ -1,5 +1,6 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
+from typing import Callable, Optional
 from pydantic import ValidationError
 from llm import generate_json, generate_with_tools, ParseError, LLMError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
@@ -58,7 +59,12 @@ def validate_report(r):
     return True, clean
 
 
-def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
+def generate_report(
+    transcript,
+    version=ACTIVE_VERSION,
+    use_retrieval=True,
+    on_model_status: Optional[Callable[[str], None]] = None,
+):
     """Returns {"report": dict or None, "meta": {...}}. Raises LLMError on API failure."""
     meta = {
         "parse_ok": True,
@@ -97,7 +103,9 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
         )
         allowed = "\n".join(f"- {tag}: {description}" for tag, description in TAXONOMY.items())
         tool_user = f"ALLOWED WEAKNESS TAGS:\n{allowed}\n\nTRANSCRIPT:\n{text}"
-        function_calls = generate_with_tools(tool_system, tool_user, [lookup_tool])
+        function_calls = generate_with_tools(
+            tool_system, tool_user, [lookup_tool], on_model_status=on_model_status
+        )
         if len(function_calls) != 1:
             raise LLMError("The model must invoke lookup_rubric_by_tag exactly once.")
         function_call = function_calls[0]
@@ -128,7 +136,12 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     # CAPABILITY: structured prompting (versioned system prompt) + structured output (JSON, validated).
     for _ in range(2):  # one retry if the output does not parse or validate
         try:
-            data = generate_json(FEEDBACK_PROMPTS[version], user, schema=FeedbackReport)
+            data = generate_json(
+                FEEDBACK_PROMPTS[version],
+                user,
+                schema=FeedbackReport,
+                on_model_status=on_model_status,
+            )
         except ParseError as e:
             print(f"[feedback] JSON parse failed: {e!r}", flush=True)
             continue
