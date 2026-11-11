@@ -19,12 +19,12 @@ TAXONOMY = {
 }
 
 SCORE_RUBRIC = (
-    "OVERALL SCORE: set overall_score to an integer from 1 to 5.\n"
-    "1 = vague, no structure, no metric, no users named\n"
-    "2 = some structure but misses most of: problem framing, users, metric, tradeoffs\n"
-    "3 = covers about half of: problem framing, users, metric, tradeoffs\n"
-    "4 = covers all four with minor gaps\n"
-    "5 = covers all four with specific, quantified, well prioritized reasoning"
+    "OVERALL SCORE: set overall_score to an integer from 1 to 10.\n"
+    "1-2 = vague, no structure, no metric, no users named\n"
+    "3-4 = some structure but misses most of: problem framing, users, metric, tradeoffs\n"
+    "5-6 = covers about half of: problem framing, users, metric, tradeoffs\n"
+    "7-8 = covers all four with minor gaps\n"
+    "9-10 = covers all four with specific, quantified, well prioritized reasoning"
 )
 
 
@@ -54,7 +54,7 @@ def validate_report(r):
         print(f"[feedback] report failed validation: {e!r}", flush=True)
         return False, None
     clean = report.model_dump()
-    clean["overall_score"] = min(max(int(clean.get("overall_score", 1)), 1), 5)  # keep it in 1 to 5
+    clean["overall_score"] = min(max(int(clean.get("overall_score", 1)), 1), 10)  # keep it in 1 to 10
     return True, clean
 
 
