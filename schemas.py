@@ -27,7 +27,7 @@ class Weakness(BaseModel):
 
 
 class FeedbackReport(BaseModel):
-    overall_score: int = Field(description="Overall answer quality, integer 1 to 5")
+    overall_score: int = Field(description="Overall answer quality, integer 1 to 10")
     overall_summary: str
     strengths: list[str]
     weaknesses: list[Weakness]
