@@ -24,7 +24,9 @@ SCORE_RUBRIC = (
     "3-4 = some structure but misses most of: problem framing, users, metric, tradeoffs\n"
     "5-6 = covers about half of: problem framing, users, metric, tradeoffs\n"
     "7-8 = covers all four with minor gaps\n"
-    "9-10 = covers all four with specific, quantified, well prioritized reasoning"
+    "9 = covers all four with specific, quantified reasoning, but one minor gap remains\n"
+    "10 = covers all four with specific, quantified, well prioritized reasoning and no weakness tag applies.\n"
+    "If your weaknesses list is empty, the score should be 10 unless you can name the minor gap."
 )
 
 
