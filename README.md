@@ -99,3 +99,23 @@ Members:
 We plan to measure the share of planted weaknesses the final report tags correctly. Is that an appropriate primary metric for useful PM interview feedback, and how should we account for false positive tags so the app cannot score well by flagging everything? Related: are weakness labels written by our own team an acceptable ground truth, or do we need a second labeller?
 
 We are currently on the Gemini API free tier. Can we switch to a different model provider (for example OpenAI or Anthropic) if we cover the cost, or if course credits are available? Free tier rate limits and inconsistent JSON output are a risk for both our evaluation runs and a reliable live demo.
+
+### Gemini model and API-key failover (Added on Nov 10, 2027)
+
+Generation starts with `gemini-3.5-flash-lite` and tries the configured fallback models in `llm.py` after an HTTP 503. On HTTP 429, the app advances to the next configured Gemini API key and keeps using it for later calls in that running process. Keys should belong to different AI Studio projects to use their separate project quotas. Embedding requests also rotate keys on HTTP 429.
+
+For local runs, set `GEMINI_API_KEYS` to a comma-separated list of keys before starting the app or evaluation script:
+
+```sh
+export GEMINI_API_KEYS="first-project-key,second-project-key"
+```
+
+The existing single-key `GEMINI_API_KEY` setting remains supported when `GEMINI_API_KEYS` is not set. For Streamlit Cloud, open the app's **Settings → Secrets** and add a TOML list:
+
+```toml
+GEMINI_API_KEYS = ["first-project-key", "second-project-key"]
+```
+
+Paste your actual keys only into the local environment or Streamlit Secrets; do not commit them to the repository. The active key order is kept in process memory, so a process restart starts again with the first key.
+
+While a follow-up or report is being generated, the app shows the model currently being tried, the next model in line, and explains when it switches models or project keys after a 503 or 429. Each model attempt can take up to 60 seconds before timing out.

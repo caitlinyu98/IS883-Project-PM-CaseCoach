@@ -1,5 +1,6 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
+from typing import Callable, Optional
 from pydantic import ValidationError
 from llm import generate_json, run_tool_turn, ParseError
 from prompts import FEEDBACK_PROMPTS, ACTIVE_VERSION
@@ -58,7 +59,12 @@ def validate_report(r):
     return True, clean
 
 
-def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
+def generate_report(
+    transcript,
+    version=ACTIVE_VERSION,
+    use_retrieval=True,
+    on_model_status: Optional[Callable[[str], None]] = None,
+):
     """Returns {"report": dict or None, "meta": {...}}. Raises LLMError on API failure."""
     meta = {
         "parse_ok": True,
@@ -96,14 +102,15 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True):
     if use_retrieval:
         tool_results = []
         lookup_tool = create_lookup_rubric_tool(meta["tool_calls"], tool_results)
-        conversation = run_tool_turn(system, user, [lookup_tool])
+        conversation = run_tool_turn(system, user, [lookup_tool], on_model_status=on_model_status)
         meta["retrieval_used"] = bool(tool_results)
         meta["retrieved_tags"] = [r["tag"] for r in tool_results]
 
     # CAPABILITY: structured output (JSON constrained to FeedbackReport, then validated). Turn 2.
     for _ in range(2):  # one retry if the output does not parse or validate
         try:
-            data = generate_json(system, conversation, schema=FeedbackReport)
+            data = generate_json(system, conversation, schema=FeedbackReport,
+                                 on_model_status=on_model_status)
         except ParseError as e:
             print(f"[feedback] JSON parse failed: {e!r}", flush=True)
             continue
