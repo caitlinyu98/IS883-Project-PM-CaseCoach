@@ -4,15 +4,7 @@ The code prepares and records an evaluation. Your team supplies reviewed expecta
 
 ## 1 Agree on the question you will answer
 
-Create `docs/evaluation_decisions.md` before the final runs. Record date, team members, and these decisions in ordinary sentences:
-
-- Primary metric: weakness-tag recall, unchanged from the workshop. Precision and F1 are safeguards, not a silently substituted headline.
-- Optional success target: choose it now, explain why, and say it was added after the workshop. Do not retrospectively claim it was predefined.
-- Comparison: tool-selected versus embedding-selected single rubric; same v3 final prompt and model. The common relevance check is part of both methods and their cost. This is a changed pipeline, not a rerun of the old prompt ablation.
-- Selected case IDs, why they expose retrieval differences, and five or ten repetitions per version. Avoid short-answer rule cases as the main comparison.
-- API model, spending allowance, and who will stop a run if quota or pricing changes.
-
-Presentation: one sentence naming recall, the comparison, and sample size. Report: a short protocol paragraph plus this file as an appendix.
+Assumptions are held in `docs/evaluation_decisions.md`: Presentation: one sentence naming recall, the comparison, and sample size. Report: a short protocol paragraph plus this file as an appendix.
 
 ## 2 Review and complete the inputs
 

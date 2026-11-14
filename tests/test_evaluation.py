@@ -135,6 +135,9 @@ class SubmissionTests(unittest.TestCase):
         app.chat_input[0].set_value('Oops').run()
         self.assertEqual(len(app.exception),0)
         self.assertEqual(app.session_state['transcript'][0]['answer'],'Oops')
+        self.assertTrue(any(w.value == 'That is too short to assess. Please write a fuller answer.' for w in app.warning))
+        self.assertFalse(any('Your response is saved above' in text for _,text in app.session_state['messages']))
+        self.assertEqual(app.session_state['q_idx'],0)
         self.assertIn(('user','Oops'),app.session_state['messages'])
         self.assertEqual(app.session_state['phase'],'answer')
     def test_off_topic_submission_saved(self):

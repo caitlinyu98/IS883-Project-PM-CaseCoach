@@ -99,8 +99,7 @@ def handle_answer(ans):
     turn = record_submission(S.transcript, q["question"], S.q_idx, ans, followup)
     field = "follow_up_answer" if followup else "answer"
     if len(turn[field].split()) < MIN_WORDS:
-        say("assistant", "Your response is saved above. You can copy it or add more detail here. "
-                         "It will remain part of your interview and feedback.")
+        S.answer_warning = "That is too short to assess. Please write a fuller answer."
         st.rerun()
     if followup:
         next_question()
@@ -212,6 +211,10 @@ if not S.started:
 
 for role, text in S.messages:
     st.chat_message(role).markdown(text)
+
+answer_warning = S.pop("answer_warning", None)
+if answer_warning:
+    st.warning(answer_warning)
 
 # ---- the feedback report ----
 if S.started and S.phase == "ready":
