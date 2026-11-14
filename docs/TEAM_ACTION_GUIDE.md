@@ -125,3 +125,87 @@ Use this presentation sequence: (1) user problem and unchanged primary metric; (
 For the written report, start with a short conclusion supported by the new evidence. Then include the five testing requirements, followed by the six numbered cost sections already generated in `session09_report.md`. Replace pending interpretation text with your reviewed findings. Put raw tables, manifests, and evidence IDs in an appendix, rather than crowding the presentation. Use the report's build-versus-buy paragraph, adapted to your actual workload and maintenance capacity.
 
 Before submission, verify: at least 20 unique realistic reviewed cases across the evidence; all required difficult categories; five complete repetitions per comparison case/method; recall retained or change disclosed; one actual metric-blind failure; complete usage or clearly stated unknowns; full-session cost; non-API costs; benefit and break-even; sourced assumptions; half/double sensitivity; and build-versus-buy. Updated November 14, 2026: the practice counter resets per interview. All submissions remain visible and are used for grading; unresolved short or off-topic answers lower the score. Review expected results using this policy, not the earlier unscored policy. An honest negative result is a valid finding. Do not present mocked software tests as live model evaluation results.
+
+## 10 Controlled versioned-prompt experiment — added November 14, 2026
+
+This experiment addresses the structured-prompting requirement: a system instruction with a deliberate structure, stored in a versioned variable, whose changes can be tested against its predecessor. The code now contains `FEEDBACK_PROMPTS["v3"]` and `FEEDBACK_PROMPTS["v4"]`. V3 stays the app default. V4 retains the exact v3 instructions and adds four ordered steps: identify the question's task, assess the complete answer, check each proposed weakness against evidence, and assemble the report. It asks for the report only, not hidden reasoning. This is task decomposition, not a few-shot experiment.
+
+### A. Record the plan before looking at results
+
+Choose the retrieval mode before running. `tool` is a useful choice if that is the intended deployment setting. Use only one mode for this prompt experiment; the tool-versus-embedding experiment remains separate. Tool selection and relevance are stochastic even with identical instructions: the actual rubric can differ between attempts. Inspect their logged outputs before attributing a gain to the final prompt. A `none` comparison removes rubric-selection variability but tests the no-retrieval setting instead. The current harness reruns upstream stages; it is not a cached identical-evidence replay experiment.
+
+Use the ten reviewed cases proposed for the retrieval comparison if they remain appropriate:
+`human_01`, `human_02`, `human_03`, `human_08`, `human_14`, `human_16`, `draft_07`, `draft_no_business_impact`, `draft_vague_solution`, `draft_unstructured`.
+Record why: strong-answer controls, related answers with different omissions, multiple weaknesses, and the three new tags. Review all labels under the ten-tag taxonomy first. Rule-only and all-off-topic cases may bypass final feedback generation, so they cannot demonstrate an effect of changing that prompt. Keep those in the broader behavioral evaluation. Report any bypasses rather than silently replacing cases after seeing results.
+
+Five repetitions for ten cases and two versions means 100 report attempts, not 100 API calls. Decide five or ten repetitions before running. Do not change the stopping rule because one version looks better. Development examples remain development examples if you have tuned against them; collect fresh held-out cases for an unseen validation claim.
+
+### B. Check the plan without spending API quota
+
+Run from the repository root with the Python environment activated. This command is offline:
+
+```sh
+python eval/run_eval.py --dataset eval/datasets/development.json \
+  --versions v3 v4 --modes tool --repeats 5 \
+  --ids human_01 human_02 human_03 human_08 human_14 human_16 \
+        draft_07 draft_no_business_impact draft_vague_solution draft_unstructured
+```
+
+It should report 10 cases and 100 report attempts. `--version v4` is also accepted as a single-version alias, but `--versions v3 v4` runs the controlled comparison together. Choose the same verified `--model` for both. In evaluation, model fallback is disabled even though the interactive app still has fallback support; record that distinction in the decisions file.
+
+After reviewers complete `reviewed_by` and the expected outcomes, freeze the dataset:
+
+```sh
+python eval/run_eval.py --dataset eval/datasets/development.json --freeze
+```
+
+If you are using fresh held-out cases, replace the path and case IDs consistently in every command. Do not simply rename development cases to held-out cases.
+
+### C. Run the repeated experiment
+
+Check that the key is available locally, prices are verified, and the team has agreed on API usage. Then execute:
+
+```sh
+python eval/run_eval.py --dataset eval/datasets/development.json \
+  --final --versions v3 v4 --modes tool --repeats 5 \
+  --ids human_01 human_02 human_03 human_08 human_14 human_16 \
+        draft_07 draft_no_business_impact draft_vague_solution draft_unstructured \
+  --run
+```
+
+The evaluator shuffles version/case jobs within each repetition using the saved seed. It saves the exact final-feedback prompts, selected versions, settings, source snapshots, and dataset hash in the run folder. Each result and cost-ledger row identifies its prompt version. A final two-version comparison with fewer than five repetitions is rejected. The live app remains v3 regardless of this command.
+
+Prefer fresh interleaved runs. Reuse an earlier v3 baseline only if the dataset, labels, code, actual model, prompt text, settings, and five-repetition coverage really match. Disclose reuse and timing differences, and do not count reused observations as independent new evidence. The report generator does not automatically merge separate run folders.
+
+### D. Produce the tables and assess what the metric misses
+
+Use the new run folder printed by the command:
+
+```sh
+python eval/report.py eval/runs/REPLACE_WITH_RUN_ID
+```
+
+- `manifest.json`: exact v3/v4 prompts, versions, controls, case IDs, and hashes.
+- `results.jsonl`: report text, selected rubrics, relevance judgments, calls, failures, and version for each case/repetition.
+- `metrics.json`: recall and secondary metrics per version/mode/repetition, including model-only scores.
+- `comparison.csv`: separate per-version rows with recall, precision, F1, and observed input/candidate-output/thought token totals.
+- `cost_ledger.csv`: request-level usage and priced dollars by prompt version. Missing billing evidence stays unknown.
+- `human_review.csv`: includes a version column so reviews cannot be accidentally assigned to the other prompt. Judge evidence and fixes with the same standard. Where possible, hide the version from the reviewer and restore its identity afterwards using case/mode/repetition identifiers plus a separate blind-review key.
+- `session09_report.md`: summary table grouped by prompt version and retrieval mode, including recall range, cost, and latency.
+
+For a prompt-specific diagnosis, filter the cost ledger to `stage = final_feedback`. Also report total pipeline tokens and cost, because that is what a user interaction consumes. Do not mix final-step cost for one version with full-pipeline cost for the other. The shared relevance step and rubric-selection calls remain part of total cost.
+
+Inspect disagreements, not just the highest mean: did v4 remove unsupported tags, miss real weaknesses, or merely produce longer feedback? Were different rubric selections involved? Use a changed-facts input to investigate sensitivity to facts. Neither a score nor the model's explanation proves whether it reasoned or recalled training material. Report plausible interpretations as such.
+
+### E. Present and write the result
+
+Use one slide titled **Does explicit task decomposition improve feedback?** Show:
+
+1. A short excerpt of v3 and the four added v4 steps, with the variable names.
+2. The controls and sample size: 10 cases × 5 repetitions × 2 versions; fixed model and retrieval mode.
+3. A two-row table: prompt version, recall mean/range, precision, input tokens, output/thought tokens, and dollars per report. State whether the tokens are mean per case or per complete test run.
+4. One sentence: 'We retained [version] because [observed quality difference] was/was not worth [observed extra cost].' If results overlap substantially, say the evidence is inconclusive rather than calling the larger mean a proven win.
+
+In the written report, use a short subsection with the hypothesis, exact change, frozen case selection, five-repeat protocol, results table, and interpretation. Link the run ID and prompt text in an appendix. Add one observed evidence/actionability failure if recall passes it. This comparison supports both structured prompting and the repeated-costed comparison requirement, but does not replace the 20-input coverage requirement or the six cost/value sections. A higher score is not necessary: a well-documented null or negative finding is valid.
+
+Do not deploy v4 just because it is newer. After reviewing the evidence, separately record the chosen app version and justification. If more prompt changes are made after these results, create a new version and disclose that the evaluation informed it.

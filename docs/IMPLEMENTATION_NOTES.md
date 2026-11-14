@@ -20,7 +20,7 @@ submitted test transcripts and require privacy review before sharing.
 
 Evaluation data now contains explicit question text, avoiding silent question-ID remapping.
 Legacy CSV and v1/v2 prompt definitions remain for history, but this new controlled pipeline
-requires v3. New draft test cases require review. Freeze hashes and source snapshots support
+supports v3 and v4. V4 changes only the final-feedback system prompt; v3 remains the app default. New draft test cases require review. Freeze hashes and source snapshots support
 reproducibility. A final comparison needs at least five repetitions; the separate coverage
 preflight reports missing required categories but does not pretend that reviewer sign-off
 proves real-user provenance. No live model results were fabricated or reused from old runs.
@@ -54,3 +54,5 @@ existing embedding index construction is unchanged. Review all existing expected
 for the newly supported weaknesses, and independently review the three new AI-drafted
 cases in development.json before freezing. The draft labels are proposals, not completed
 human assessments. Apply each weakness only when relevant to the specific question.
+
+November 14, 2026: the evaluator supports interleaved v3/v4 experiments and snapshots exact prompts. Report and review keys include version. See team guide section 10.

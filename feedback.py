@@ -70,8 +70,8 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True,
     mode = retrieval_mode or (os.environ.get("CASECOACH_RETRIEVAL_MODE", "tool") if use_retrieval else "none")
     if mode not in {"none", "tool", "embedding"}:
         raise ValueError("Unknown retrieval mode")
-    if version != "v3":
-        raise ValueError("Use v3 for the new controlled pipeline; v1/v2 are archived prompts, not equivalent experiments")
+    if version not in {"v3", "v4"}:
+        raise ValueError("Use v3 or v4 for the new controlled pipeline; v1/v2 are archived prompts, not equivalent experiments")
     meta = dict(parse_ok=True, retrieval_mode=mode, retrieval_used=False,
                 retrieved_tags=[], tool_calls=[], rule_based=False, relevance=[],
                 formatting_failures=0)

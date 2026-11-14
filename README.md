@@ -177,3 +177,13 @@ existing embedding index construction is unchanged. Review all existing expected
 for the newly supported weaknesses, and independently review the three new AI-drafted
 cases in development.json before freezing. The draft labels are proposals, not completed
 human assessments. Apply each weakness only when relevant to the specific question.
+
+### Controlled prompt comparison added November 14, 2026
+
+`FEEDBACK_PROMPTS["v4"]` preserves v3 and adds explicit task decomposition and an
+evidence-check sequence. V3 remains the deployment default. To compare only final-feedback
+prompt versions with a fixed retrieval mode, use `--versions v3 v4 --modes tool` in
+`eval/run_eval.py`. The harness interleaves jobs, records exact prompts, and keeps metrics,
+usage, and human-review rows separate by version. See section 10 of the team action guide
+for review, freeze, execution, and presentation instructions. Upstream relevance/retrieval
+calls still vary stochastically; their instructions are held fixed, not their outputs.

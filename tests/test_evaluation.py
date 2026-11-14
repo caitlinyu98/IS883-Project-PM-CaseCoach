@@ -185,4 +185,45 @@ class TaxonomyTests(unittest.TestCase):
             self.assertEqual(case['reviewed_by'],'')
             self.assertIn('AI-drafted',case['provenance'])
 
+class PromptVersionTests(unittest.TestCase):
+    def test_v4_preserves_v3_and_other_prompt_controls(self):
+        from prompts import FEEDBACK_PROMPTS,FOLLOWUP_PROMPTS,ACTIVE_VERSION
+        self.assertTrue(FEEDBACK_PROMPTS['v4'].startswith(FEEDBACK_PROMPTS['v3']))
+        self.assertIn('1. Identify',FEEDBACK_PROMPTS['v4'])
+        self.assertEqual(FOLLOWUP_PROMPTS['v3'],FOLLOWUP_PROMPTS['v4'])
+        self.assertEqual(ACTIVE_VERSION,'v3')
+    def test_only_final_system_instruction_changes(self):
+        from prompts import FEEDBACK_PROMPTS
+        relevance=dict(items=[dict(index=0,status='relevant',reason='ok')])
+        requests=[]
+        for version in ('v3','v4'):
+            with patch('feedback.generate_json',side_effect=[relevance,dict(REPORT)]) as api:
+                generate_report(TRANSCRIPT,retrieval_mode='none',version=version)
+                requests.append(api.call_args_list)
+        self.assertEqual(requests[0][0],requests[1][0])
+        self.assertEqual(requests[0][1].args[1],requests[1][1].args[1])
+        self.assertEqual(requests[0][1].kwargs,requests[1][1].kwargs)
+        self.assertEqual(requests[1][1].args[0],FEEDBACK_PROMPTS['v4'])
+    def test_two_versions_stay_separate_in_saved_results_and_report(self):
+        import json,tempfile,sys,csv
+        from pathlib import Path
+        from eval import run_eval,report
+        data=dict(unit='single_answer_report',cases=[dict(id='case',question='Q',answer='A substantial answer for this question.',expected_tags=[],category='ordinary',expected_behavior='Relevant')])
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);dataset=root/'cases.json';dataset.write_text(json.dumps(data))
+            fake=dict(report=REPORT,meta=dict(rule_based=False,formatting_failures=0,retrieved_tags=[]))
+            with patch.object(sys,'argv',['run_eval','--dataset',str(dataset),'--out',str(root/'runs'),'--versions','v3','v4','--modes','none','--repeats','1','--sleep','0','--run']),patch('feedback.generate_report',return_value=fake):
+                run_eval.main()
+            folder=next((root/'runs').iterdir())
+            with patch.object(sys,'argv',['report',str(folder)]):report.main()
+            manifest=json.loads((folder/'manifest.json').read_text())
+            self.assertEqual(manifest['versions'],['v3','v4'])
+            self.assertEqual(set(manifest['feedback_prompts']),{'v3','v4'})
+            with (folder/'comparison.csv').open() as f: rows=list(csv.DictReader(f))
+            self.assertEqual({r['version'] for r in rows},{'v3','v4'})
+            with (folder/'human_review.csv').open() as f: reviews=list(csv.DictReader(f))
+            self.assertEqual(len(reviews),2)
+            text=(folder/'session09_report.md').read_text()
+            self.assertIn('v3 / none',text);self.assertIn('v4 / none',text)
+
 if __name__=='__main__':unittest.main()
