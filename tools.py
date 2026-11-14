@@ -36,6 +36,8 @@ def create_lookup_rubric_tool(
         "Look up a rubric by weakness tag. Valid tags: no_success_metric, "
         "no_user_segmentation, no_clear_problem_framing, "
         "no_prioritization_rationale, no_tradeoffs_or_risks, off_topic, "
-        "empty_or_too_short."
+        "empty_or_too_short, no_business_impact, vague_solution, unstructured. "
+        "Select a weakness rubric relevant to the exact question. Question-type rubrics "
+        "are not valid weakness tags. Selecting a rubric does not establish a weakness."
     )
     return tracked_lookup_rubric_by_tag

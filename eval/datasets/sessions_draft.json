@@ -1,0 +1,39 @@
+{
+  "unit": "full_interview",
+  "reviewed_by": "",
+  "status": "DRAFT: supply follow-up answers before freezing; review their fit against generated questions after each run",
+  "cases": [
+    {
+      "id": "session_draft_01",
+      "question": "Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool.",
+      "answer": "The most important thing is to understand what is driving food waste. Are sales down, or are restaurants ordering too much inventory? I would begin by interviewing managers of small and medium-sized restaurants who are responsible for these activities, and I would compare purchasing, inventory, and waste records. Depending on the findings of these interviews, I would focus on creating alerts for products that will expire soon, monitoring low and high inventory levels, and improving inventory rotation. I would compare food waste cost against total ingredient purchases and monitor whether it decreases by at least 10% over three months. The risk here is that food waste is increasing because of supply quality issues.",
+      "transcript": [
+        {
+          "question": "Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool.",
+          "answer": "The most important thing is to understand what is driving food waste. Are sales down, or are restaurants ordering too much inventory? I would begin by interviewing managers of small and medium-sized restaurants who are responsible for these activities, and I would compare purchasing, inventory, and waste records. Depending on the findings of these interviews, I would focus on creating alerts for products that will expire soon, monitoring low and high inventory levels, and improving inventory rotation. I would compare food waste cost against total ingredient purchases and monitor whether it decreases by at least 10% over three months. The risk here is that food waste is increasing because of supply quality issues.",
+          "follow_up_answer": ""
+        },
+        {
+          "question": "You are the PM for a B2B invoicing product. How would you measure whether the product is successful?",
+          "answer": "I would consider the product successful if it could process and collect B2B payments while reducing manual work. The organization's leaders would use the product to monitor cash flow more effectively, while accountants would use it to generate invoices and resolve payment issues. The metric I would track is the percentage-point increase in the share of invoices paid on time compared with the period before the tool was implemented. The risk is that manual validation may still be required every time.",
+          "follow_up_answer": ""
+        },
+        {
+          "question": "You are the PM for a B2B SaaS tool used by finance teams to approve invoices. Customers say approvals take too long. How would you approach this?",
+          "answer": "I would first like to understand what is causing approvals to slow down. I would determine whether this is an issue across all teams in the organization. I would also interview the team responsible for approving these invoices. If invoices are taking too long because the people responsible are handling too many approvals, I would redesign approval workflows and try to improve approval times by reducing the number of approvers for each request and increasing approvers' accountability. My goal would be to decrease approval time by 20% in three months. The risk of doing this is that it could weaken financial controls.",
+          "follow_up_answer": ""
+        },
+        {
+          "question": "Your company is launching a new onboarding flow for an enterprise analytics product. How would you define and measure success?",
+          "answer": "The goal of an onboarding flow is to improve setup and continued use of the product. Before diving deeper, it is important to think about the users, who in this case are data analysts whose main goal is to answer business questions using data. I would measure how many of the company's paid licenses are active and how many users have downloaded a report in the last month. I would establish a baseline for these metrics and assume a potential increase of 20% across all observed metrics with the new onboarding flow in the coming months. The risk of this approach is that someone else in the company needs to connect the product to internal databases, while I am assuming the issue lies with the end user.",
+          "follow_up_answer": ""
+        }
+      ],
+      "expected_tags": [],
+      "category": "session",
+      "expected_behavior": "Assess all questions and repaired gaps; independently label full session.",
+      "provenance": "Four existing team-authored answers assembled into a draft session; follow-up answers must be supplied and reviewed",
+      "reviewed_by": ""
+    }
+  ]
+}

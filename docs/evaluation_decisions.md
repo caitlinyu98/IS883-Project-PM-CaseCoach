@@ -1,0 +1,7 @@
+Nov 14, 2026, Max, Jimena, Jacobo, Caitlin
+
+- As the primary metric we stick with the weakness-tag recall as defined in the workshop checkpoint. Precision and F1 serve as safeguards.
+- Optional success target: Before running the corrected final evaluation, we set a target of at least 80% mean weakness-tag recall across five repetitions, with mean precision of at least 70% as a safeguard against excessive false positives. Recall remains the primary metric established at the workshop; these numerical thresholds were added afterwards. We will report the range across repetitions and model-only results separately. Meeting these targets will demonstrate acceptable weakness detection on our test set, not prove overall coaching effectiveness.
+- Comparison: tool-selected versus embedding-selected single rubric; same v3 final prompt and model. The common relevance check is part of both methods and their cost. This is a changed pipeline, not a rerun of the old prompt ablation.
+- Selected case IDs, why they expose retrieval differences, and five or ten repetitions per version. Avoid short-answer rule cases as the main comparison.
+- Primary API model: Gemini 3.5-flash-lite, with fallbacks defined in llm.py. spending allowance is capped by the free tier applied.

@@ -1,0 +1,32 @@
+{
+  "values": {
+    "users": null,
+    "sessions_per_user_year": null,
+    "hosting_monthly": null,
+    "storage_monthly": null,
+    "other_monthly": null,
+    "maintenance_hours_monthly": null,
+    "maintenance_hourly_rate": null,
+    "build_hours": null,
+    "build_hourly_rate": null,
+    "minutes_saved": null,
+    "time_value_hourly": null,
+    "index_builds_year": null,
+    "index_build_cost": null
+  },
+  "sources": {
+    "users": "PENDING: evidence or explicit planning assumption",
+    "sessions_per_user_year": "PENDING: evidence or explicit planning assumption",
+    "hosting_monthly": "PENDING: evidence or explicit planning assumption",
+    "storage_monthly": "PENDING: evidence or explicit planning assumption",
+    "other_monthly": "PENDING: evidence or explicit planning assumption",
+    "maintenance_hours_monthly": "PENDING: evidence or explicit planning assumption",
+    "maintenance_hourly_rate": "PENDING: evidence or explicit planning assumption",
+    "build_hours": "PENDING: evidence or explicit planning assumption",
+    "build_hourly_rate": "PENDING: evidence or explicit planning assumption",
+    "minutes_saved": "PENDING: evidence or explicit planning assumption",
+    "time_value_hourly": "PENDING: evidence or explicit planning assumption",
+    "index_builds_year": "PENDING: evidence or explicit planning assumption",
+    "index_build_cost": "PENDING: evidence or explicit planning assumption"
+  }
+}
