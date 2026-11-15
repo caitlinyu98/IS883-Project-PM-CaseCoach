@@ -176,16 +176,16 @@ class TaxonomyTests(unittest.TestCase):
             self.assertIn(tag,tool.__doc__)
             self.assertEqual(tool(tag)['tag'],tag)
         self.assertEqual(len(log),3)
-    def test_new_drafts_are_valid_and_unreviewed(self):
+    def test_new_cases_are_valid_and_reviewed(self):
         import json
         from pathlib import Path
         from eval.run_eval import validate
         data=json.loads((Path(__file__).resolve().parents[1]/'eval/datasets/development.json').read_text())
         self.assertTrue(validate(data))
         for tag in ('no_business_impact','vague_solution','unstructured'):
-            case=next(c for c in data['cases'] if c['id']=='draft_'+tag)
+            case=next(c for c in data['cases'] if c['id']=='new_'+tag)
             self.assertEqual(case['expected_tags'],[tag])
-            self.assertEqual(case['reviewed_by'],'')
+            self.assertTrue(case.get('reviewed_by', '').strip())
             self.assertIn('AI-drafted',case['provenance'])
 
 class PromptVersionTests(unittest.TestCase):

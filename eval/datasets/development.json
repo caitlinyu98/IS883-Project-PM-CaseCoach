@@ -1,7 +1,7 @@
 {
   "unit": "single_answer_report",
-  "reviewed_by": "",
-  "status": "DRAFT: taxonomy expanded from seven to ten before corrected evaluation; re-review all labels and realism before freezing",
+  "reviewed_by": "Max",
+  "status": "Completed: taxonomy expanded from seven to ten before corrected evaluation; re-reviewed all labels and realism and approved",
   "cases": [
     {
       "id": "human_01",
@@ -300,17 +300,17 @@
       "reviewed_by": "Max"
     },
     {
-      "id": "draft_05",
+      "id": "new_05",
       "question": "How would you measure success for a B2B invoicing product?",
       "answer": "I would track on-time invoice payments for small businesses. Our target is 140% of eligible invoices paid on time, with a baseline of 80%. I would monitor fraud and support load.",
       "expected_tags": [],
       "category": "invalid_value",
       "expected_behavior": "Identify that a proportion of eligible invoices cannot exceed 100%; ask to correct it. Tag labels need review.",
       "provenance": "AI-drafted proposed test; not an actual user submission",
-      "reviewed_by": ""
+      "reviewed_by": "Max"
     },
     {
-      "id": "new_05",
+      "id": "new_06",
       "question": "Choose between SSO and dashboards based on expected revenue and engineering effort.",
       "answer": "SSO would unblock $20,000 of revenue and take six months. Dashboards would unblock $200,000 and take one month. I would choose SSO simply because enterprise customers usually need it.",
       "expected_tags": [
@@ -322,7 +322,7 @@
       "reviewed_by": "Caitlin"
     },
     {
-      "id": "new_06",
+      "id": "new_07",
       "question": "How would you measure success for a B2B invoicing product?",
       "answer": "I would launch the first feature idea immediately for every customer and decide whether it worked based on my intuition.",
       "expected_tags": [
@@ -337,7 +337,7 @@
       "reviewed_by": "Caitlin"
     },
     {
-      "id": "no_business_impact",
+      "id": "new_no_business_impact",
       "question": "Propose an improvement to onboarding for a B2B analytics product and explain why the company should invest in it.",
       "answer": "I would first check whether setup stalls because the interface hides the next step, using setup logs and interviews. I would focus on small-company analysts who configure their own accounts; finance directors purchase the licenses. I would add a setup checklist showing the next unfinished task, with a button opening that task and a confirmation when it is complete. I would prioritize this over a tutorial library because it reaches every new account with less engineering effort. Success would be median checklist completion time falling from 20 to 12 minutes over a month. The risk is users rushing through configuration, so I would track setup errors and pilot with a small group. That is the extent of my investment case: a faster checklist and a cleaner interface.",
       "expected_tags": [
@@ -350,7 +350,7 @@
       "reviewed_by": "Caitlin"
     },
     {
-      "id": "vague_solution",
+      "id": "new_vague_solution",
       "question": "Design an onboarding improvement for a B2B analytics product. Explain what you would build and how a new user would use it.",
       "answer": "I would first confirm from session logs and analyst interviews that new users abandon setup because they cannot work out what to do next. I would focus on analysts at small companies who set up their own accounts; the finance director is the buyer. My solution is smarter onboarding with an AI assistant that makes the experience intuitive and personalized. I would choose that over a video library because it could respond to individual needs rather than requiring users to search videos. I would track first useful report completion within seven days, targeting an increase from 40% to 50%, and check whether renewal improves enough to justify the service cost. Incorrect AI advice is a risk, so I would pilot with ten accounts, monitor setup errors, and provide a human-support option. That is what I would build: a better, smarter onboarding experience.",
       "expected_tags": [
@@ -363,7 +363,7 @@
       "reviewed_by": "Caitlin"
     },
     {
-      "id": "unstructured",
+      "id": "new_unstructured",
       "question": "How would you reduce slow invoice approvals in a B2B finance product? Give a clear recommendation and explain your reasoning.",
       "answer": "I would target a 20% reduction in median approval time over three months. Finance directors buy it, but accounts-payable managers use it. Audit trails must stay intact. A reminder would appear after 24 hours and the manager could open the waiting invoice from it. First I need approval timestamps and manager interviews to find the bottleneck. There is also notification fatigue. Mid-sized accounts with several approvers are my first segment. The button opens the invoice. I mentioned the 20% target. Faster approval should reduce late fees and improve renewal, which is the business case. The interviews come before building, of course. I would choose reminders over replacing the approval workflow because they are cheaper to build and preserve controls. The buyer is the finance director. For fatigue I would use one daily digest, pilot with ten accounts, and track complaints. The timestamps tell me whether handoffs are really the cause. My recommendation is the reminders, assuming the interviews confirm that. The button and the digest are the feature.",
       "expected_tags": [
