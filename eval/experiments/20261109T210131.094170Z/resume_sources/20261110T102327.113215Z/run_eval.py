@@ -1,0 +1,70 @@
+# Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
+# --- Caitlin: eval harness, metric = % planted weaknesses identified (change name to the real owner) ---
+# Usage (set GEMINI_API_KEY in your terminal first):
+#   python eval/run_eval.py --limit 2                 # develop on 2 rows
+#   python eval/run_eval.py --limit 0 --no-retrieval  # full set, retrieval off
+import argparse
+import csv
+import json
+import os
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from feedback import generate_report  # noqa: E402
+from question_bank import BY_ID  # noqa: E402
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--csv", default=os.path.join(os.path.dirname(__file__), "test_set.csv"))
+ap.add_argument("--version", default="v1")
+ap.add_argument("--output", help="Explicit results path; use a unique path for each run")
+ap.add_argument("--no-retrieval", action="store_true")
+ap.add_argument("--limit", type=int, default=2, help="0 means all rows")
+ap.add_argument("--sleep", type=float, default=4.0, help="seconds between calls (free tier rate limit)")
+args = ap.parse_args()
+
+rows = list(csv.DictReader(open(args.csv, encoding="utf-8")))
+if args.limit:
+    rows = rows[: args.limit]
+
+hits = planted_total = extra = predicted_total = parsed = 0
+out = []
+checkpoint_path = args.output + ".jsonl" if args.output else None
+if args.output and os.path.exists(args.output):
+    raise FileExistsError(args.output)
+if checkpoint_path:
+    open(checkpoint_path, "x").close()
+for r in rows:
+    planted = {t for t in r["planted_weaknesses"].split("|") if t}
+    transcript = [{"question": BY_ID[r["question_id"]]["question"], "answer": r["answer"]}]
+    res = None
+    error = None
+    try:
+        res = generate_report(transcript, version=args.version, use_retrieval=not args.no_retrieval)
+        report = res["report"]
+    except Exception as e:  # API error counts as a failed row, not a crash
+        error = str(e)
+        print(r["id"], "API error:", e)
+        report = None
+    ok = report is not None
+    parsed += ok
+    predicted = {w["tag"] for w in report["weaknesses"]} if ok else set()
+    hits += len(planted & predicted)
+    planted_total += len(planted)
+    extra += len(predicted - planted)
+    predicted_total += len(predicted)
+    out.append({"id": r["id"], "planted": sorted(planted), "predicted": sorted(predicted), "parse_ok": ok, "result": res, "error": error})
+    if checkpoint_path:
+        with open(checkpoint_path, "a") as checkpoint:
+            checkpoint.write(json.dumps(out[-1]) + "\n")
+    time.sleep(args.sleep)
+
+print(f"rows: {len(rows)}  parse rate: {parsed}/{len(rows)}")
+print(f"PRIMARY  % planted weaknesses identified: {hits}/{planted_total}"
+      f" = {100 * hits / planted_total:.1f}%" if planted_total else "no planted weaknesses in set")
+print(f"SECONDARY  precision (guards against tagging everything): {hits}/{predicted_total}"
+      f" = {100 * hits / predicted_total:.1f}%" if predicted_total else "no tags predicted")
+tag = f"{args.version}_{'noret' if args.no_retrieval else 'ret'}"
+output_path = args.output or os.path.join(os.path.dirname(__file__), f"results_{tag}.json")
+with open(output_path, "x" if args.output else "w") as f:
+    json.dump(out, f, indent=2)  # Includes complete reports and metadata for auditability

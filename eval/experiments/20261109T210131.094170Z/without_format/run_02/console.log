@@ -1,0 +1,3 @@
+rows: 20  parse rate: 20/20
+PRIMARY  % planted weaknesses identified: 6/14 = 42.9%
+SECONDARY  precision (guards against tagging everything): 6/32 = 18.8%

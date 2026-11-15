@@ -1,0 +1,152 @@
+[
+  {
+    "id": "q01",
+    "type": "product_strategy",
+    "question": "Imagine you're the CPO of Zoom, facing heavy competition from Google Meet. What would you do?",
+    "strong_answer_includes": "clarifies the goal (retention, revenue, market share); analyzes Zoom's strengths vs Meet's distribution advantage through Google Workspace; segments users (enterprise, SMB, consumers); picks a defensible position like platform or vertical depth; proposes 2-3 concrete bets; names risks and how to measure success"
+  },
+  {
+    "id": "q02",
+    "type": "product_strategy",
+    "question": "Shopify has built its business on small and mid-sized merchants. Should it invest in moving upmarket to win large enterprise retailers?",
+    "strong_answer_includes": "states Shopify's objective (growth, revenue per customer, defensibility); compares SMB and enterprise needs like customization, integrations, and support; assesses competitors like Salesforce Commerce Cloud and Adobe Commerce; weighs the risk of distracting from the core SMB base; makes a clear recommendation; defines how to test it, for example with a pilot segment"
+  },
+  {
+    "id": "q03",
+    "type": "product_strategy",
+    "question": "Toast, the restaurant POS and management platform, is considering expanding into Latin America. Should it, and how?",
+    "strong_answer_includes": "sizes the opportunity and market structure; identifies local differences like payment methods, tax rules, hardware costs, and restaurant size; maps local competitors; assesses Toast's advantages and gaps; proposes an entry approach like one country first or a partnership; names key risks; gives a clear recommendation with success criteria"
+  },
+  {
+    "id": "q04",
+    "type": "product_strategy",
+    "question": "You're the PM at HubSpot. A competitor launches AI agents that let its customers automate sales outreach, with no human sales development representative needed. How do you respond?",
+    "strong_answer_includes": "assesses how real the threat is for HubSpot's core customers; avoids copying feature for feature without a reason; identifies HubSpot's moats (CRM data, ecosystem, SMB trust); considers build, partner, or acquire options; prioritizes one response with rationale; names risks like spam or brand damage for customers; defines leading indicators to monitor"
+  },
+  {
+    "id": "q05",
+    "type": "product_strategy",
+    "question": "Should Figma move from per-seat pricing to usage-based pricing for its new AI features?",
+    "strong_answer_includes": "explains the tradeoffs of seat-based vs usage-based pricing; considers how AI changes cost to serve; segments customers (individuals, teams, enterprise) and how each buys; thinks about predictability for enterprise procurement; considers hybrid options; makes a recommendation; defines metrics like expansion revenue, margin, and churn"
+  },
+  {
+    "id": "q06",
+    "type": "product_sense",
+    "question": "Design a feature that helps restaurant managers reduce food waste in a B2B inventory tool.",
+    "strong_answer_includes": "clarifies scope and goal; segments managers vs owners vs kitchen staff; picks one pain point and justifies it; proposes a concrete solution; defines a success metric like % waste reduced; names a tradeoff or risk"
+  },
+  {
+    "id": "q07",
+    "type": "product_sense",
+    "question": "How would you improve the onboarding experience for new companies signing up for a payroll platform like Gusto?",
+    "strong_answer_includes": "clarifies who onboards (founder, HR, accountant) and what success looks like; maps the current flow and where companies drop off; identifies pain points like data migration or compliance setup; prioritizes one problem; proposes a specific improvement; defines metrics like time to first payroll; names risks like errors in sensitive data"
+  },
+  {
+    "id": "q08",
+    "type": "product_sense",
+    "question": "Design a tool that helps sales managers forecast their team's pipeline more accurately.",
+    "strong_answer_includes": "clarifies users (sales managers, reps, sales leadership, finance); identifies why forecasts are inaccurate today, like optimistic reps or stale CRM data; picks one root problem; proposes a concrete solution and how it fits rep workflows; defines success like forecast accuracy; names risks like low data quality or rep resistance"
+  },
+  {
+    "id": "q09",
+    "type": "product_sense",
+    "question": "Design a product that helps logistics managers track shipments across multiple carriers.",
+    "strong_answer_includes": "clarifies the type of company and shipment volume; identifies users (logistics managers, operations staff, customer service, end customers); picks a key pain point like lack of visibility or late delay alerts; proposes a specific solution and core flow; addresses carrier integrations; defines success metrics; names risks like inconsistent carrier data"
+  },
+  {
+    "id": "q10",
+    "type": "product_sense",
+    "question": "Design an AI feature for Zendesk that helps support agents resolve tickets faster.",
+    "strong_answer_includes": "clarifies Zendesk's goal and who buys vs who uses (support leaders vs agents); identifies where agents lose time; picks one problem and explains why AI fits it; describes the agent experience end to end; defines metrics like resolution time and CSAT; names risks like wrong answers reaching customers and how to keep a human in the loop"
+  },
+  {
+    "id": "q11",
+    "type": "analytical_execution",
+    "question": "Weekly active users among enterprise accounts of a B2B project management tool dropped 15% last month. How would you investigate?",
+    "strong_answer_includes": "clarifies how active users are defined and confirms the data is accurate; checks external factors like holidays or fiscal year end; segments by account size, industry, role, and region; checks for churned or downgraded accounts vs lower usage within accounts; looks at recent releases, pricing, or permission changes; forms and tests hypotheses; proposes next steps with customer success"
+  },
+  {
+    "id": "q12",
+    "type": "analytical_execution",
+    "question": "Your B2B SaaS company just launched a freemium plan. How would you define success?",
+    "strong_answer_includes": "ties freemium to business goals like acquisition, pipeline, and revenue; defines the funnel from signup to activation to paid; picks a primary metric like free-to-paid conversion; defines an activation moment and upgrade triggers; adds guardrails like cannibalization of existing paid plans, cost of serving free users, and support load; explains how to set targets and when to evaluate"
+  },
+  {
+    "id": "q13",
+    "type": "analytical_execution",
+    "question": "What North Star metric would you choose for Microsoft Teams, and why?",
+    "strong_answer_includes": "explains what a North Star metric should capture; considers who buys (IT admins) vs who uses (employees); compares candidates like daily active users, meetings held, or teams actively collaborating per organization; picks one and ties it to customer value and revenue; breaks it into input metrics teams can influence; names limitations of the chosen metric"
+  },
+  {
+    "id": "q14",
+    "type": "analytical_execution",
+    "question": "A new pricing page increases free trial signups by 12% but trial-to-paid conversion drops by 4%. Do you ship it?",
+    "strong_answer_includes": "checks statistical significance and test validity; calculates net impact on paid customers and revenue; segments results by company size and acquisition channel; considers lead quality and sales team workload; investigates why conversion dropped; considers iterating instead of a simple yes or no; makes a clear decision with reasoning"
+  },
+  {
+    "id": "q15",
+    "type": "analytical_execution",
+    "question": "Your team only has capacity for one feature this quarter: AI meeting summaries or a redesigned onboarding flow for Slack. How do you decide?",
+    "strong_answer_includes": "aligns the decision with company and team goals; estimates impact, reach, effort, and confidence for each option; considers data you have and data you'd gather; looks at dependencies and risks; uses a clear prioritization framework; makes a recommendation and explains how to communicate it to stakeholders"
+  },
+  {
+    "id": "q16",
+    "type": "behavioral",
+    "question": "Tell me about a time you disagreed with an engineer or designer on a product decision, and how you resolved it.",
+    "strong_answer_includes": "uses a clear structure like STAR; sets context and stakes briefly; shows curiosity about the other person's view; explains how data or user insight was used to resolve it; describes the outcome and impact; reflects on what was learned without blaming"
+  },
+  {
+    "id": "q17",
+    "type": "behavioral",
+    "question": "Tell me about a product or feature you launched that didn't go as planned.",
+    "strong_answer_includes": "picks a real failure, not a disguised success; owns their part of the outcome; explains how they detected the problem; describes actions taken to recover or learn; shares concrete lessons; shows how they applied those lessons later"
+  },
+  {
+    "id": "q18",
+    "type": "behavioral",
+    "question": "Describe a time you had to influence a team or stakeholder without having direct authority.",
+    "strong_answer_includes": "explains the situation and why authority was missing; shows understanding of the stakeholder's incentives; describes specific tactics like data, prototypes, or building allies; shows resulting alignment and impact; reflects on what worked"
+  },
+  {
+    "id": "q19",
+    "type": "behavioral",
+    "question": "Tell me about a time you had to make an important decision with incomplete data.",
+    "strong_answer_includes": "describes the decision and why waiting wasn't an option; explains how they gathered the best available signals; shows how they managed risk, for example by making it reversible; communicates the decision clearly; shares the outcome; reflects on judgment and what they'd change"
+  },
+  {
+    "id": "q20",
+    "type": "behavioral",
+    "question": "Tell me about a time you had to prioritize between competing requests from different stakeholders.",
+    "strong_answer_includes": "sets context on who was asking and why; explains the criteria used to prioritize; shows how tradeoffs were communicated and expectations managed; describes the result and how relationships were kept; signals ownership and level-appropriate scope"
+  },
+  {
+    "id": "q21",
+    "type": "technical_fluency",
+    "question": "Explain how a large language model works to a non-technical executive, and what its main limitations are.",
+    "strong_answer_includes": "uses simple language and an analogy; explains training on large text data and next-token prediction at a high level; names limitations like hallucinations, outdated knowledge, cost, and latency; connects limitations to business risk; suggests mitigations like grounding and human review"
+  },
+  {
+    "id": "q22",
+    "type": "technical_fluency",
+    "question": "You're building an AI support assistant using your company's help center. Would you use prompt engineering, RAG, or fine-tuning, and why?",
+    "strong_answer_includes": "explains each approach briefly and accurately; matches the approach to the problem (frequently changing knowledge points to RAG); considers cost, latency, maintenance, and data needs; mentions evaluation and fallback to human agents; makes a clear recommendation with tradeoffs"
+  },
+  {
+    "id": "q23",
+    "type": "technical_fluency",
+    "question": "Engineering estimates a feature will take three months, but the business needs it in one. What do you do?",
+    "strong_answer_includes": "seeks to understand what drives the estimate before pushing back; explores scope cuts and a smaller MVP; discusses technical tradeoffs like tech debt openly; considers adding resources or changing sequencing; aligns with stakeholders on the tradeoff; keeps trust with the engineering team"
+  },
+  {
+    "id": "q24",
+    "type": "technical_fluency",
+    "question": "What is an API, and why do B2B customers care so much about integrations? How would you decide which integrations to build first?",
+    "strong_answer_includes": "explains an API simply and accurately; connects integrations to customer workflows, switching costs, and retention; mentions concepts like webhooks, authentication, and rate limits at a high level; proposes prioritization criteria like customer demand, deal impact, and build cost; names maintenance and security considerations"
+  },
+  {
+    "id": "q25",
+    "type": "technical_fluency",
+    "question": "How would you evaluate whether an AI feature is ready to launch?",
+    "strong_answer_includes": "defines what 'good' means for the use case; describes building an eval set with real examples and edge cases; combines automated metrics, human review, and user testing; tracks accuracy, hallucination rate, latency, and cost; sets launch thresholds and guardrails; plans monitoring and iteration after launch"
+  }
+]

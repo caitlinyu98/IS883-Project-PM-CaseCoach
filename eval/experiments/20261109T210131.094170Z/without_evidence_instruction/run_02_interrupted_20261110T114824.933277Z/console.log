@@ -1,0 +1,19 @@
+human_03 API error: The read operation timed out
+human_04 API error: [Errno 8] nodename nor servname provided, or not known
+human_05 API error: [Errno 8] nodename nor servname provided, or not known
+human_06 API error: [Errno 8] nodename nor servname provided, or not known
+human_07 API error: [Errno 8] nodename nor servname provided, or not known
+human_08 API error: [Errno 8] nodename nor servname provided, or not known
+human_10 API error: [Errno 8] nodename nor servname provided, or not known
+human_11 API error: [Errno 8] nodename nor servname provided, or not known
+human_12 API error: [Errno 8] nodename nor servname provided, or not known
+human_13 API error: [Errno 8] nodename nor servname provided, or not known
+human_14 API error: [Errno 8] nodename nor servname provided, or not known
+human_15 API error: [Errno 8] nodename nor servname provided, or not known
+human_16 API error: [Errno 8] nodename nor servname provided, or not known
+human_17 API error: [Errno 8] nodename nor servname provided, or not known
+human_18 API error: [Errno 8] nodename nor servname provided, or not known
+human_19 API error: [Errno 8] nodename nor servname provided, or not known
+rows: 20  parse rate: 4/20
+PRIMARY  % planted weaknesses identified: 2/14 = 14.3%
+SECONDARY  precision (guards against tagging everything): 2/4 = 50.0%

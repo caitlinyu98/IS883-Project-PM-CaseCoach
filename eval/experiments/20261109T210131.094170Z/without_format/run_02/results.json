@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "human_01",
+    "planted": [],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate completely misunderstood the prompt, answering a question about food waste reduction for restaurants instead of addressing Zoom's competition against Google Meet.",
+        "strengths": [
+          "Mentioned user interviews and data analysis",
+          "Included a concrete success metric and time frame",
+          "Identified a relevant risk regarding the proposed solution"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed reducing food waste for restaurants instead of being the CPO of Zoom facing competition from Google Meet.",
+            "fix": "Read the prompt carefully and ensure your answer directly addresses the specific product, role, and competitive scenario provided."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening and repeat the core premise of the prompt before starting your answer.",
+          "Ensure your product strategy responses match the industry and company specified in the question.",
+          "Focus on structured problem-solving frameworks tailored to B2B SaaS competition."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_02",
+    "planted": [
+      "no_success_metric"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided an answer completely unrelated to the interview question about Zoom and Google Meet, instead discussing restaurant food waste and inventory management.",
+        "strengths": [],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed restaurant food waste, restaurant managers, inventory levels, and expiration alerts when asked about being the CPO of Zoom facing competition from Google Meet.",
+            "fix": "Read the prompt carefully and tailor your product strategy directly to the company, product, and competitive scenario provided."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening to ensure your answers directly address the prompt.",
+          "Prepare foundational B2B SaaS strategy frameworks for video conferencing tools like Zoom."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_03",
+    "planted": [
+      "no_user_segmentation"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided an answer completely unrelated to the prompt, discussing food waste management instead of addressing competition between Zoom and Google Meet as a CPO.",
+        "strengths": [
+          "Mentioned a specific metric and timeline for food waste reduction",
+          "Identified a potential risk regarding supply quality"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate talked entirely about food waste, purchasing, inventory, and restaurant operations when asked about Zoom competing against Google Meet.",
+            "fix": "Read the prompt carefully before answering and ensure your product strategy directly addresses the specific company and competitive scenario given."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening to ensure interview responses directly address the scenario provided",
+          "Prepare structured product strategy frameworks for B2B SaaS competition"
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_04",
+    "planted": [],
+    "predicted": [
+      "no_clear_problem_framing"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 2,
+        "overall_summary": "The candidate immediately jumps into success metrics and user types without defining the strategic problem, failing to frame whether Shopify should target enterprise retailers or why the shift makes sense.",
+        "strengths": [
+          "Identified concrete user personas such as organization leaders and accountants",
+          "Proposed a specific metric regarding the share of invoices paid on time",
+          "Acknowledged a potential operational risk involving manual validation"
+        ],
+        "weaknesses": [
+          {
+            "tag": "no_clear_problem_framing",
+            "evidence": "The candidate starts proposing metrics and user use cases right after hearing the question without ever stating the goal, scoping the enterprise segment, or framing why Shopify should move upmarket.",
+            "fix": "Spend the first minute defining the problem by asking about the strategic goal, the exact definition of large enterprise retailers, and any constraints, or state these assumptions out loud."
+          }
+        ],
+        "next_steps": [
+          "Start product strategy answers by explicitly clarifying the business goal and market scope before discussing metrics.",
+          "Practice framing market expansion decisions using a structured framework that weighs market size against core competencies."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "no_clear_problem_framing"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "no_clear_problem_framing"
+            },
+            "result_id": "no_clear_problem_framing"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_05",
+    "planted": [
+      "no_success_metric"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate fails to address the core strategic question about whether Shopify should move upmarket into enterprise retailers, instead discussing generic B2B payments features and user roles without answering the prompt.",
+        "strengths": [],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The question asks whether Shopify should invest in moving upmarket to win large enterprise retailers, but the candidate talks about processing B2B payments, manual work reduction, and invoice generation without addressing the enterprise market strategy.",
+            "fix": "Directly address the strategic question first by taking a stance on whether Shopify should move upmarket, then structure the answer around market sizing, enterprise merchant needs, and core business alignment before diving into product features."
+          }
+        ],
+        "next_steps": [
+          "Practice restructuring strategic product management questions to directly answer the core prompt first.",
+          "Focus on market analysis, customer segmentation, and enterprise-specific pain points when evaluating upmarket expansions.",
+          "Ensure all parts of the interviewer's prompt are answered before discussing features, metrics, or risks."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_06",
+    "planted": [
+      "no_user_segmentation"
+    ],
+    "predicted": [
+      "no_clear_problem_framing",
+      "no_prioritization_rationale",
+      "no_user_segmentation"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate immediately jumps into metrics and risks without framing the problem, defining user segments, or addressing the core strategic question of whether Shopify should move upmarket.",
+        "strengths": [
+          "Mentioned a specific quantitative metric for on-time invoice payments.",
+          "Identified a concrete operational risk regarding manual validation."
+        ],
+        "weaknesses": [
+          {
+            "tag": "no_clear_problem_framing",
+            "evidence": "The candidate starts proposing success metrics and risks right after hearing the question without asking or stating who the customer is, what the goal is, or what is in scope.",
+            "fix": "Spend the first minute defining the problem by stating assumptions about enterprise merchants versus small businesses and clarifying the strategic goal before discussing metrics."
+          },
+          {
+            "tag": "no_user_segmentation",
+            "evidence": "The candidate refers broadly to B2B payments and tools without specifying which enterprise merchant segments or buyer personas Shopify should target.",
+            "fix": "Explicitly segment enterprise retailers by company size or GMV volume and select one target segment to focus on."
+          },
+          {
+            "tag": "no_prioritization_rationale",
+            "evidence": "The answer completely omits any reasoning for why Shopify should or should not invest in the enterprise market compared to other opportunities.",
+            "fix": "Provide an evaluation framework or pros/cons list weighing the enterprise market against continuing to focus on small and mid-sized merchants."
+          }
+        ],
+        "next_steps": [
+          "Practice starting product strategy questions by clarifying the customer segments and business goals first.",
+          "Structure enterprise strategy answers by comparing market sizing, ROI, and core competency alignment.",
+          "Incorporate trade-off analysis explicitly when evaluating new market expansions."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "no_clear_problem_framing"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "no_clear_problem_framing"
+            },
+            "result_id": "no_clear_problem_framing"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_07",
+    "planted": [],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided an answer completely disconnected from the prompt, discussing internal invoice approval workflows instead of Toast expanding into Latin America.",
+        "strengths": [
+          "Mentioned a quantitative goal and timeframe for the unrelated invoice scenario"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate talked about internal invoice approvals and reducing approvers, which has nothing to do with Toast expanding into Latin America.",
+            "fix": "Read the prompt carefully before answering and ensure your problem framing addresses the actual business expansion scenario asked."
+          }
+        ],
+        "next_steps": [
+          "Practice market expansion and geographic entry case questions",
+          "Ensure structured active listening during the prompt delivery"
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_08",
+    "planted": [
+      "no_clear_problem_framing"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate failed to address the prompt regarding Toast's expansion into Latin America, instead discussing internal approval workflows.",
+        "strengths": [
+          "Stated a quantifiable goal for approval times",
+          "Identified a clear risk related to the proposed change"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed redesigning approval workflows and reducing approvers, which completely ignores the question about Toast expanding into Latin America.",
+            "fix": "Re-read the interview prompt carefully and ensure your answer directly addresses the specific product and market scenario asked."
+          }
+        ],
+        "next_steps": [
+          "Practice listening carefully to product expansion and market entry prompts.",
+          "Structure international expansion answers by addressing market opportunity, user segments, localization needs, and entry risks."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_09",
+    "planted": [
+      "empty_or_too_short"
+    ],
+    "predicted": [
+      "empty_or_too_short"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "There was not enough of an answer to assess.",
+        "strengths": [],
+        "weaknesses": [
+          {
+            "tag": "empty_or_too_short",
+            "evidence": "The answer was empty or only a few words.",
+            "fix": "Write a structured answer: frame the problem, name users, a metric, and tradeoffs."
+          }
+        ],
+        "next_steps": [
+          "Try again with a full answer."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": false,
+        "retrieved_tags": [],
+        "tool_calls": [],
+        "rule_based": true
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_10",
+    "planted": [
+      "no_success_metric"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided an answer completely unrelated to the interview question about expanding Toast into Latin America, instead discussing invoice approvals.",
+        "strengths": [
+          "Identified a risk regarding financial controls in the irrelevant scenario"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed invoice approvals and organizational workflows instead of addressing the prompt about Toast expanding into Latin America.",
+            "fix": "Re-read the interview prompt carefully before answering and structure the response around market expansion strategies for the requested region."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening to ensure responses directly address the specific scenario presented by the interviewer."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_11",
+    "planted": [],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided a canned response about an onboarding flow and data analysts, which completely ignores the specific prompt regarding a competitor launching autonomous AI sales agents for sales outreach.",
+        "strengths": [
+          "Mentioned a metric and baseline target"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed improving an onboarding flow for data analysts, which is entirely unrelated to HubSpot, competitors launching AI sales agents, and automating sales outreach.",
+            "fix": "Read the interview question carefully and map your response directly to the specific prompt and company context provided instead of delivering a memorized, irrelevant answer."
+          }
+        ],
+        "next_steps": [
+          "Practice listening to the prompt to ensure the scenario is addressed accurately",
+          "Tailor product strategy responses to the competitive threat described in the question"
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_12",
+    "planted": [
+      "no_success_metric"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate provided a response that is completely off-topic for a HubSpot B2B SaaS scenario involving a competitive AI agent threat. They discussed onboarding flows and data analysts, which have no relevance to CRM, sales outreach automation, or sales development representatives.",
+        "strengths": [
+          "Attempted to identify user types and risks"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate talked about onboarding flows for data analysts answering business questions using data, which completely ignores the HubSpot sales outreach and AI agent competitor scenario.",
+            "fix": "Read the prompt carefully and ground your response in the actual product domain and competitive threat provided instead of defaulting to a canned onboarding answer."
+          }
+        ],
+        "next_steps": [
+          "Practice identifying the core product and market dynamics in the prompt before speaking.",
+          "Ensure your strategy directly addresses competitor moves in the correct industry."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_13",
+    "planted": [
+      "no_user_segmentation"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate's answer is completely off topic, addressing a user onboarding flow instead of a competitive response to AI sales agents. Additionally, it fails to frame the actual problem or segment users.",
+        "strengths": [
+          "Mentioned a risk regarding internal database connections."
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate stated: 'The goal of an onboarding flow is to improve setup and continued use of the product,' which completely ignores the competitive threat of AI agents automating sales outreach.",
+            "fix": "Read the prompt carefully and directly address how HubSpot should respond to the competitor launching AI agents for sales outreach."
+          }
+        ],
+        "next_steps": [
+          "Practice identifying the core question before structuring your response.",
+          "Structure competitive response answers by analyzing the threat, identifying affected user segments, and proposing a strategic product roadmap."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_14",
+    "planted": [],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate failed to answer the specific question asked about moving to usage-based pricing for Figma's AI features, instead talking about unrelated features like SSO, dashboards, and Slack integrations.",
+        "strengths": [
+          "Mentioned evaluating options against customer impact, revenue impact, and engineering effort."
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discussed SSO, dashboards, and Slack integrations instead of addressing per-seat versus usage-based pricing for Figma's AI features.",
+            "fix": "Focus your answer directly on the prompt's scenario regarding pricing models for AI features, rather than pivoting to a completely different set of enterprise features."
+          }
+        ],
+        "next_steps": [
+          "Practice actively listening to interview questions to ensure your response directly targets the core dilemma presented.",
+          "Prepare structured frameworks specifically for pricing strategy and monetization questions."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_15",
+    "planted": [
+      "no_user_segmentation"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate completely misses the core question about moving Figma from per-seat pricing to usage-based pricing for AI features, instead discussing enterprise features like SSO, dashboards, and Slack integrations.",
+        "strengths": [
+          "Attempts to use evaluation criteria such as customer and revenue impact"
+        ],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate discusses unrelated enterprise features like SSO, dashboards, and Slack integrations instead of addressing the pricing model question for AI features.",
+            "fix": "Re-read the prompt carefully and address the specific scenario regarding pricing models for AI features rather than pivoting to roadmap prioritization for unrelated features."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening to ensure answers directly address the prompt",
+          "Prepare structured arguments around monetization models like usage-based versus per-seat pricing"
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_16",
+    "planted": [
+      "no_tradeoffs_or_risks"
+    ],
+    "predicted": [
+      "empty_or_too_short",
+      "no_clear_problem_framing",
+      "no_prioritization_rationale",
+      "no_success_metric",
+      "no_tradeoffs_or_risks",
+      "no_user_segmentation"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate's response is extremely short and generic, failing to address the core pricing strategy question about Figma's AI features, user segments, success metrics, or specific tradeoffs.",
+        "strengths": [
+          "Mentions evaluation criteria such as customer impact and engineering effort."
+        ],
+        "weaknesses": [
+          {
+            "tag": "empty_or_too_short",
+            "evidence": "The entire answer is just two sentences that generalize about features rather than addressing the pricing model question.",
+            "fix": "Expand the response to directly address the prompt by discussing per-seat versus usage-based pricing models in detail."
+          },
+          {
+            "tag": "no_clear_problem_framing",
+            "evidence": "The candidate immediately jumps to evaluating options and features without defining the problem with current per-seat pricing for AI.",
+            "fix": "Start by stating why the current per-seat pricing model might fail for high-cost AI features before jumping into solutions."
+          },
+          {
+            "tag": "no_user_segmentation",
+            "evidence": "The candidate never identifies or prioritizes any user segments for Figma's AI features.",
+            "fix": "Explicitly define user segments such as heavy enterprise users versus casual hobbyists before choosing a pricing model."
+          },
+          {
+            "tag": "no_success_metric",
+            "evidence": "No concrete success metric or way to measure the impact of the new pricing model is provided.",
+            "fix": "Define a specific metric like Average Revenue Per User (ARPU) or AI feature adoption rate to measure pricing success."
+          },
+          {
+            "tag": "no_prioritization_rationale",
+            "evidence": "The candidate mentions criteria but never actually makes a decision or applies prioritization rationale to choose a pricing model.",
+            "fix": "State clear criteria, compare usage-based and per-seat pricing against them, and make a definitive choice on which one to implement."
+          },
+          {
+            "tag": "no_tradeoffs_or_risks",
+            "evidence": "The candidate completely ignores the risks and tradeoffs associated with shifting to usage-based pricing.",
+            "fix": "Discuss the risk of unpredictable revenue with usage-based pricing and how you would mitigate it."
+          }
+        ],
+        "next_steps": [
+          "Practice structured product management frameworks like CIRCLES or DIGS for pricing questions.",
+          "Ensure you explicitly name user segments and success metrics in every strategy answer.",
+          "Always make a clear recommendation and defend it with explicit tradeoffs."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "no_prioritization_rationale"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "no_prioritization_rationale"
+            },
+            "result_id": "no_prioritization_rationale"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_17",
+    "planted": [],
+    "predicted": [
+      "no_clear_problem_framing",
+      "no_success_metric",
+      "no_user_segmentation"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate's answer is extremely vague and high-level, lacking any concrete feature design, user segmentation, problem framing, or specific success metrics for the B2B inventory tool.",
+        "strengths": [
+          "Recognizes the importance of talking to customers before building solutions.",
+          "Considers the basic financial viability of the feature."
+        ],
+        "weaknesses": [
+          {
+            "tag": "no_clear_problem_framing",
+            "evidence": "The candidate immediately jumps to talking vaguely about client needs without framing the specific problem, goal, or scope of restaurant food waste reduction.",
+            "fix": "Spend the first minute defining the problem by stating assumptions out loud, such as asking whether you are solving for spoilage tracking, inventory over-ordering, or plate waste in commercial kitchens."
+          },
+          {
+            "tag": "no_user_segmentation",
+            "evidence": "The candidate refers broadly to 'the customer' and 'clients' without identifying specific restaurant manager segments, such as quick-service restaurant managers versus fine-dining chefs.",
+            "fix": "Explicitly define and prioritize user segments at the start, stating which specific type of restaurant manager or staff member you are designing the inventory tool feature for."
+          },
+          {
+            "tag": "no_success_metric",
+            "evidence": "The candidate only mentions creating positive value and checking data generically, failing to provide any concrete success metric like percentage reduction in wasted inventory or financial savings.",
+            "fix": "Define explicit primary metrics, such as a 15% reduction in wasted food ingredients within the first 3 months of adoption."
+          }
+        ],
+        "next_steps": [
+          "Practice structuring product design answers using a clear framework: problem framing, user segmentation, feature ideation, and metrics.",
+          "Incorporate specific quantitative success metrics into every design scenario.",
+          "Avoid meta-commentary about how you would talk to customers, and instead simulate the actual customer pain points and insights."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "no_clear_problem_framing"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "no_clear_problem_framing"
+            },
+            "result_id": "no_clear_problem_framing"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_18",
+    "planted": [
+      "no_tradeoffs_or_risks"
+    ],
+    "predicted": [
+      "no_clear_problem_framing",
+      "no_success_metric",
+      "no_tradeoffs_or_risks",
+      "no_user_segmentation"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate's response is extremely brief, generic, and lacks any concrete problem framing, user segmentation, success metrics, or trade-offs. It fails to actually design a feature or provide specific product management reasoning.",
+        "strengths": [
+          "Acknowledged the importance of talking to customers."
+        ],
+        "weaknesses": [
+          {
+            "tag": "no_clear_problem_framing",
+            "evidence": "The candidate immediately stated they would talk to the customer without defining the problem, customer segment, or scope out loud.",
+            "fix": "Spend the first minute defining the problem and stating your assumptions out loud, such as: 'Before designing this, I want to confirm: are we trying to reduce inventory spoilage or prep waste, and are we focused on independent restaurants or large chains?'"
+          },
+          {
+            "tag": "no_user_segmentation",
+            "evidence": "The candidate referred broadly to 'the customer' and 'client' without identifying distinct restaurant manager segments.",
+            "fix": "Explicitly segment your users, such as distinguishing between head chefs of fine dining establishments and inventory managers of fast-food chains."
+          },
+          {
+            "tag": "no_success_metric",
+            "evidence": "The candidate did not mention any way to measure the success of the feature.",
+            "fix": "Define a primary metric tied to the business goal, such as reducing average weekly food waste by 15%."
+          },
+          {
+            "tag": "no_tradeoffs_or_risks",
+            "evidence": "The candidate mentioned comparing solutions but omitted any discussion of risks, constraints, or trade-offs.",
+            "fix": "Discuss the potential downsides or engineering risks of your proposed solutions, such as high data entry friction for busy kitchen staff."
+          }
+        ],
+        "next_steps": [
+          "Practice answering product design questions using a structured framework like CIRCLES or DIGS.",
+          "Ensure you explicitly state user segments, problem scope, and metrics before jumping into solutions."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "no_clear_problem_framing"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "no_clear_problem_framing"
+            },
+            "result_id": "no_clear_problem_framing"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_19",
+    "planted": [
+      "off_topic"
+    ],
+    "predicted": [
+      "off_topic"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "The candidate completely failed to answer the interview question, discussing cycling instead of designing a B2B inventory feature for restaurant managers.",
+        "strengths": [],
+        "weaknesses": [
+          {
+            "tag": "off_topic",
+            "evidence": "The candidate talked entirely about cycling, mountains, and beginner routes instead of addressing the prompt about restaurant food waste and inventory tools.",
+            "fix": "Listen carefully to the prompt, restate the core question in your own words before speaking, and structure your response around the requested product domain."
+          }
+        ],
+        "next_steps": [
+          "Practice active listening to ensure answers directly address the prompt.",
+          "Prepare structured frameworks for B2B product design questions."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": true,
+        "retrieved_tags": [
+          "off_topic"
+        ],
+        "tool_calls": [
+          {
+            "name": "lookup_rubric_by_tag",
+            "argument": {
+              "tag": "off_topic"
+            },
+            "result_id": "off_topic"
+          }
+        ],
+        "rule_based": false
+      }
+    },
+    "error": null
+  },
+  {
+    "id": "human_20",
+    "planted": [
+      "empty_or_too_short"
+    ],
+    "predicted": [
+      "empty_or_too_short"
+    ],
+    "parse_ok": true,
+    "result": {
+      "report": {
+        "overall_score": 1,
+        "overall_summary": "There was not enough of an answer to assess.",
+        "strengths": [],
+        "weaknesses": [
+          {
+            "tag": "empty_or_too_short",
+            "evidence": "The answer was empty or only a few words.",
+            "fix": "Write a structured answer: frame the problem, name users, a metric, and tradeoffs."
+          }
+        ],
+        "next_steps": [
+          "Try again with a full answer."
+        ]
+      },
+      "meta": {
+        "parse_ok": true,
+        "retrieval_used": false,
+        "retrieved_tags": [],
+        "tool_calls": [],
+        "rule_based": true
+      }
+    },
+    "error": null
+  }
+]

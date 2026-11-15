@@ -1,0 +1,2 @@
+variant,runs,recall_mean,recall_min,recall_max,recall_sd,precision_mean,precision_min,precision_max,precision_sd,flags_mean,flags_min,flags_max,flags_sd,parse_rate_mean,parse_rate_min,parse_rate_max,parse_rate_sd
+baseline,1,0.21428571428571427,0.21428571428571427,0.21428571428571427,,0.14285714285714285,0.14285714285714285,0.14285714285714285,,21,21,21,,0.85,0.85,0.85,

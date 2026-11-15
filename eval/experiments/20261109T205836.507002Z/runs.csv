@@ -1,0 +1,2 @@
+variant,repeat,rows,hits,planted,flags,recall,precision,parse_rate,api_errors
+baseline,1,20,3,14,21,0.21428571428571427,0.14285714285714285,0.85,3

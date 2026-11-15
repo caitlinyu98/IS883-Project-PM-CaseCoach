@@ -1,0 +1,16 @@
+human_01 reused saved successful result
+human_02 reused saved successful result
+human_03 reused saved successful result
+human_04 reused saved successful result
+human_05 reused saved successful result
+human_09 reused saved successful result
+human_14 reused saved successful result
+human_15 reused saved successful result
+human_16 reused saved successful result
+human_17 reused saved successful result
+human_18 reused saved successful result
+human_19 reused saved successful result
+human_20 reused saved successful result
+rows: 20  parse rate: 20/20
+PRIMARY  % planted weaknesses identified: 4/14 = 28.6%
+SECONDARY  precision (guards against tagging everything): 4/32 = 12.5%
