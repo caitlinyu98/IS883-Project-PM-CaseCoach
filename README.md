@@ -83,7 +83,7 @@ Members:
 
 * **Tool calling (implemented).** The feedback flow uses a model-invoked `lookup_rubric_by_tag` in `tools.py`; its returned rubric evidence is supplied to the structured feedback generation. Ordinary Python retrieval does not count as tool calling.
 * **8 row test set with expected results: Jacobo, by Oct 28.** Answers and independently labeled expected tags, drawn from the allowed tag list, committed to `eval/test_set.csv` before any scoring run.
-* **Request cap fix so Start over does not reset it: Caitlin, by Oct 26.** Move the quota counter outside the resettable interview state; regression test consecutive sessions.
+* **Per-interview request limit — updated November 14, 2026.** Start over begins a new interview and resets its practice request counter. This supersedes the earlier plan to preserve the counter across interviews.
 * **Retry button for a failed report: Caitlin, by Oct 26.** Keep the transcript after a formatting failure; every retry counts against the cap.
 * **Pin requirements.txt and test a cold start: Caitlin, by Oct 27.** Confirm the deployed URL loads after a clean Streamlit Cloud restart with the rubric file included.
 * **Replace starter content, owner names and rubric snippets: Jimena (content), Max (integration), by Oct 29.** Final questions, prompts and rubric snippets, with provenance and permission documented; confirm retrieval grounds the final report.
@@ -119,3 +119,97 @@ GEMINI_API_KEYS = ["first-project-key", "second-project-key"]
 Paste your actual keys only into the local environment or Streamlit Secrets; do not commit them to the repository. The active key order is kept in process memory, so a process restart starts again with the first key.
 
 While a follow-up or report is being generated, the app shows the model currently being tried, the next model in line, and explains when it switches models or project keys after a 503 or 429. Each model attempt can take up to 60 seconds before timing out.
+
+## Corrected Session 9 evaluation workflow
+
+Start with [the team action guide](docs/TEAM_ACTION_GUIDE.md). It explains review, freezing,
+commands, live API prerequisites, cost assumptions, and presentation/report evidence.
+
+The new controlled pipeline is prompt **v3**, with `CASECOACH_RETRIEVAL_MODE=tool`
+(default), `embedding`, or `none`. Both retrieval methods supply one rubric to the same
+final generator. A common relevance check precedes grading. This is a new experiment;
+older v1/v2 results do not describe it. The old CSV is historical; the new evaluator uses
+explicit-question JSON datasets to avoid the question-bank mismatch.
+
+```sh
+python -m unittest discover -s tests -v
+python eval/run_eval.py  # offline preflight, no model calls
+```
+
+Draft datasets and blank prices/assumptions must be reviewed before final evaluation.
+`--run` makes API calls; `--final` requires a reviewed frozen dataset. Output folders are
+unique and ignored by Git because they can contain participant text. The report generator
+never substitutes invented prices or missing token counts. See `docs/IMPLEMENTATION_NOTES.md`
+for changes and limitations.
+
+
+### Interview behavior updated November 14, 2026
+
+The practice request limit is **per interview**. Start over clears the previous interview
+and resets the counter to zero. The sidebar labels these as practice request units,
+not actual provider calls or a dollar spending cap.
+
+Every submitted answer is saved in the visible chat and structured transcript **before**
+length, relevance, quota, or API checks. Short and off-topic answers remain available to
+copy. Additional submissions for the same question are retained in order, not overwritten
+or counted as separate interview questions. Users can continue an answer or end the
+interview and request feedback on what they have submitted.
+
+Final grading includes the entire submitted interview. Unresolved all-short or all-off-topic
+answers receive 1/10, not an omitted score. For mixed interviews, the model assesses all
+answers; an equal-question score ceiling prevents unresolved nonanswers from disappearing
+from the score (each such question contributes at most 1/10 to the maximum, rounded to the
+nearest integer). For example, one unresolved nonanswer among four caps the overall score
+at 8/10. This is a maximum, not a second subtraction from the model's score. Later corrections
+can resolve an earlier gap; the original text still remains in the transcript.
+
+
+## Taxonomy expansion recorded November 14, 2026
+
+Before the corrected evaluation, the allowed weakness taxonomy expanded from seven to ten
+by adding `no_business_impact`, `vague_solution`, and `unstructured`. Weakness-tag recall
+remains the primary workshop metric; its label coverage has expanded. Historical seven-tag
+scores are not directly comparable to ten-tag scores as evidence of improvement.
+
+The five question-type rubrics are unchanged and remain excluded from weakness selection.
+Both retrieval methods still select one weakness rubric, now from ten candidates. The
+existing embedding index construction is unchanged. Review all existing expected labels
+for the newly supported weaknesses, and independently review the three new AI-drafted
+cases in development.json before freezing. The draft labels are proposals, not completed
+human assessments. Apply each weakness only when relevant to the specific question.
+
+### Controlled prompt comparison added November 14, 2026
+
+`FEEDBACK_PROMPTS["v4"]` preserves v3 and adds explicit task decomposition and an
+evidence-check sequence. V3 remains the deployment default. To compare only final-feedback
+prompt versions with a fixed retrieval mode, use `--versions v3 v4 --modes tool` in
+`eval/run_eval.py`. The harness interleaves jobs, records exact prompts, and keeps metrics,
+usage, and human-review rows separate by version. See section 10 of the team action guide
+for review, freeze, execution, and presentation instructions. Upstream relevance/retrieval
+calls still vary stochastically; their instructions are held fixed, not their outputs.
+
+
+### API-key retry policy updated November 15, 2026
+
+On HTTP 429, the shared client waits 10 seconds and retries the same API key once.
+If that retry also returns 429, it switches to the next key and wraps to the first
+at the end of the list. Each API operation allows two complete circuits (at most
+four attempts per configured key). If all attempts fail, that operation raises an
+error and the evaluation records a failed row; subsequent rows can try keys again.
+Keys are no longer permanently marked exhausted for the process. This applies to
+both evaluation and the app, and to generation and embedding calls. Evaluation
+still disables model fallback. Logs retain each provider attempt, and operation
+latency includes the retry waits. A 10-second wait cannot guarantee recovery from
+long-lived quota exhaustion. Do not present failed rows as completed repetitions.
+
+
+### Score explanations required as of November 15, 2026
+
+Every newly generated score below 10 requires a `score_explanation` stating a supported
+gap and how to improve it. The UI shows it as an additional "Why X/10" item in
+"What to work on", alongside existing weakness bullets. Empty/missing explanations
+fail validation and use the existing one-retry flow. Rule-based low scores and scoring
+ceilings also supply explanations. This shared prompt/schema change applies equally
+to v3 and v4; archived results are unchanged and should not be pooled with new runs
+without disclosing the changed report contract. Validation enforces presence; human
+review still checks whether the explanation is accurate and useful.
