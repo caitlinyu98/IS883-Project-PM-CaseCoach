@@ -1,4 +1,4 @@
-
+# Max 
 # Failure paths: empty or too short answer (rule, no model call), off topic answer
 # (model sets in_scope = false), API error (friendly message), report that does not
 # parse (retry button), and the per session request cap.
@@ -166,6 +166,12 @@ def show_report(res):
             f"<b>{esc(TAXONOMY[w['tag']])}</b>: {esc(w['evidence'])}<br><i>Fix:</i> {esc(w['fix'])}"
             for w in report["weaknesses"]
         ]
+        if score is not None and score < 10:
+            explanation = report.get("score_explanation")
+            if explanation:
+                weaknesses.append(f"<b>Why {score}/10:</b> {esc(explanation)}")
+            else:
+                weaknesses.append("<b>Score explanation unavailable:</b> This report was generated before explanations were required. Generate a new report for an explanation.")
         next_steps = [esc(s) for s in report["next_steps"]]
 
         st.markdown(

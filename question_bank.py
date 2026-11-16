@@ -1,5 +1,5 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: question bank loader and interview picker (bank format from starter-scaffold) ---
+# Jimena: question bank loader and interview picker ---
 #
 # Questions live in data/questions.json, each with an id, a type, the question text, and what a
 # strong answer includes. Code (not the model) picks the questions for an interview, so every

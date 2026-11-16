@@ -1,5 +1,5 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: structured output schema for the feedback report (ported from starter-scaffold) ---
+# Jacobo: structured output schema for the feedback report ---
 #
 # Gemini is given this schema (response_schema) so it must answer in exactly this shape.
 # Our code then validates the answer against the same schema: if it does not fit,
@@ -8,7 +8,7 @@
 # Recall remains the primary workshop metric; historical seven-tag results are not directly comparable.
 
 from typing import Literal
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 Tag = Literal[
     "no_success_metric",
@@ -34,9 +34,18 @@ class FeedbackReport(BaseModel):
     model_config = ConfigDict(strict=True)
     overall_score: int = Field(ge=1, le=10, description="Overall interview score 1 to 10, including off-topic and insufficient answers")
     overall_summary: str
+    score_explanation: str = Field(description="For scores below 10, identify the specific remaining gap, its evidence, and how to improve. Empty string for 10.")
     strengths: list[str]
     weaknesses: list[Weakness]
     next_steps: list[str]
+
+
+    @model_validator(mode="after")
+    def require_score_explanation(self):
+        self.score_explanation = self.score_explanation.strip()
+        if self.overall_score < 10 and not self.score_explanation:
+            raise ValueError("A score below 10 requires an explicit score_explanation")
+        return self
 
 
 class RelevanceItem(BaseModel):

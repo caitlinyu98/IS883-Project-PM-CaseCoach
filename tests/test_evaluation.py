@@ -8,7 +8,7 @@ from telemetry import capture,measured,stage
 from feedback import generate_report,validate_report
 from interviewer import generate_followup
 
-REPORT=dict(overall_score=7,overall_summary='Some gaps.',strengths=[],weaknesses=[],next_steps=[])
+REPORT=dict(score_explanation='The answer does not justify the target. Explain the baseline and why that target is realistic.',overall_score=7,overall_summary='Some gaps.',strengths=[],weaknesses=[],next_steps=[])
 TRANSCRIPT=[dict(question='How would you measure invoice success?',answer='I would measure on time payment rates for small businesses.')]
 class EvaluationTests(unittest.TestCase):
     def test_failure_on_clean_case_is_not_exact_pass(self):
@@ -228,5 +228,68 @@ class PromptVersionTests(unittest.TestCase):
             self.assertEqual(len(reviews),2)
             text=(folder/'session09_report.md').read_text()
             self.assertIn('v3 / none',text);self.assertIn('v4 / none',text)
+
+class KeyRotationTests(unittest.TestCase):
+    def run_requests(self, outcomes, keys):
+        import llm
+        class RateLimit(Exception):
+            code=429
+        seen=[]
+        def request(client,model):
+            seen.append(client)
+            value=outcomes.pop(0)
+            if value==429: raise RateLimit()
+            return value
+        with patch.object(llm,'_get_api_keys',return_value=keys),patch.object(llm,'_get_client',side_effect=lambda key:key),patch.object(llm,'_active_key_index',0),patch.object(llm.time,'sleep') as sleep:
+            try:
+                result=llm._call_with_failover(request,('model',))
+            except llm.LLMError:
+                result='exhausted'
+            index=llm._active_key_index
+        return result,seen,sleep.call_args_list,index
+    def test_retries_same_key_after_ten_seconds(self):
+        result,seen,sleeps,_=self.run_requests([429,'ok'],['a','b'])
+        self.assertEqual(result,'ok');self.assertEqual(seen,['a','a'])
+        self.assertEqual([c.args for c in sleeps],[(10,)])
+    def test_wraps_and_recovers_on_first_key(self):
+        result,seen,sleeps,index=self.run_requests([429,429,429,429,'ok'],['a','b'])
+        self.assertEqual(result,'ok');self.assertEqual(seen,['a','a','b','b','a'])
+        self.assertEqual(len(sleeps),2);self.assertEqual(index,0)
+    def test_exhaustion_is_bounded_and_index_stays_valid(self):
+        result,seen,sleeps,index=self.run_requests([429]*8,['a','b'])
+        self.assertEqual(result,'exhausted');self.assertEqual(len(seen),8)
+        self.assertEqual(len(sleeps),4);self.assertLess(index,2)
+    def test_single_key_has_bounded_retry(self):
+        result,seen,sleeps,index=self.run_requests([429]*4,['a'])
+        self.assertEqual(result,'exhausted');self.assertEqual(len(seen),4)
+        self.assertEqual(index,0)
+
+class ScoreExplanationTests(unittest.TestCase):
+    def test_below_ten_requires_reason_even_without_tags(self):
+        self.assertFalse(validate_report(dict(REPORT,overall_score=9,score_explanation='   '))[0])
+        missing=dict(REPORT);missing.pop('score_explanation')
+        self.assertFalse(validate_report(missing)[0])
+        self.assertTrue(validate_report(dict(REPORT,overall_score=9))[0])
+        self.assertTrue(validate_report(dict(REPORT,overall_score=10,score_explanation=''))[0])
+    def test_missing_reason_triggers_format_retry(self):
+        relevance=dict(items=[dict(index=0,status='relevant',reason='ok')])
+        with patch('feedback.generate_json',side_effect=[relevance,dict(REPORT,score_explanation=''),REPORT]):
+            result=generate_report(TRANSCRIPT,retrieval_mode='none')
+        self.assertEqual(result['meta']['formatting_failures'],1)
+        self.assertTrue(result['report']['score_explanation'])
+    def test_rule_reports_have_reason(self):
+        result=generate_report([dict(question='Q',answer='')])
+        self.assertTrue(validate_report(result['report'])[0])
+        self.assertTrue(result['report']['score_explanation'])
+    def test_ui_displays_reason_without_weakness_tags(self):
+        from streamlit.testing.v1 import AppTest
+        from pathlib import Path
+        app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/'app.py'),default_timeout=15).run()
+        app.session_state['started']=True
+        app.session_state['phase']='ready'
+        app.session_state['result']=dict(report=dict(REPORT,overall_score=9),meta={})
+        app.run()
+        self.assertEqual(len(app.exception),0)
+        self.assertTrue(any('Why 9/10:' in m.value and REPORT['score_explanation'] in m.value for m in app.markdown))
 
 if __name__=='__main__':unittest.main()

@@ -1,5 +1,4 @@
-# Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: adaptive follow up question and scope check (change name to the real owner) ---
+# Jimena: adaptive follow up question and scope check (change name to the real owner) ---
 from typing import Callable, Optional
 from llm import generate_json, ParseError
 from schemas import FollowupResult

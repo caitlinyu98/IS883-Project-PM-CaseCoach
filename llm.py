@@ -1,8 +1,9 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: Gemini client, JSON parsing, embeddings (change name to the real owner) ---
+# Caitlin: Gemini client, JSON parsing, embeddings 
 import json
 import os
 import threading
+import time
 from telemetry import measured
 from typing import Callable, Optional
 from google import genai
@@ -112,11 +113,12 @@ def _call_with_failover(
     keys = _get_api_keys()
     model_index = 0
     retry_note = None
+    same_key_retried = False
+    exhausted_visits = 0
+    max_visits = 2 * len(keys)  # two circuits per request, two attempts per key visit
+    with _state_lock:
+        key_index = _active_key_index % len(keys)
     while True:
-        with _state_lock:
-            if _active_key_index >= len(keys):
-                raise LLMError("All configured Gemini API keys are quota-exhausted.")
-            key_index = _active_key_index
         model = models[model_index]
         next_model = models[model_index + 1] if model_index + 1 < len(models) else None
         if on_model_status:
@@ -136,33 +138,37 @@ def _call_with_failover(
         except Exception as e:
             code = _status_code(e)
             if code == 429:
-                with _state_lock:
-                    _active_key_index = max(_active_key_index, key_index + 1)
-                    has_another_key = _active_key_index < len(keys)
-                if has_another_key:
-                    retry_note = (
-                        f"Quota limit reached for this project (429). "
-                        f"Retrying {model} with the next configured project key."
-                    )
+                if not same_key_retried:
+                    same_key_retried = True
+                    if on_model_status:
+                        on_model_status("Rate limit (429): waiting 10 seconds before retrying the same API key.")
+                    time.sleep(10)
+                    retry_note = "Retrying the same API key after a 10-second wait."
                     continue
-                if on_model_status:
-                    on_model_status(
-                        "The project quota is exhausted, and no additional project keys are configured."
-                    )
-                message = f"All configured Gemini API keys are quota-exhausted: {e}"
-                raise LLMError(message) from e
+                exhausted_visits += 1
+                same_key_retried = False
+                key_index = (key_index + 1) % len(keys)
+                with _state_lock:
+                    _active_key_index = key_index
+                if exhausted_visits >= max_visits:
+                    raise LLMError("Rate-limit retry budget exhausted after two circuits of the API-key list.") from e
+                retry_note = "Repeated rate limit (429): moving to the next API key, wrapping to the first when needed."
+                continue
             if code == 503 and model_index + 1 < len(models):
                 next_model = models[model_index + 1]
                 retry_note = (
                     f"{model} is temporarily unavailable (503). Switching to {next_model}."
                 )
                 model_index += 1
+                same_key_retried = False
                 continue
             if code == 503 and on_model_status:
                 on_model_status(
                     f"{model} is temporarily unavailable (503), and no fallback models remain."
                 )
             raise LLMError(str(e)) from e
+        with _state_lock:
+            _active_key_index = key_index
         if on_model_status:
             on_model_status(f"Response received from {model}.")
         return result

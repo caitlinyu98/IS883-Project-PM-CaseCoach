@@ -187,3 +187,29 @@ prompt versions with a fixed retrieval mode, use `--versions v3 v4 --modes tool`
 usage, and human-review rows separate by version. See section 10 of the team action guide
 for review, freeze, execution, and presentation instructions. Upstream relevance/retrieval
 calls still vary stochastically; their instructions are held fixed, not their outputs.
+
+
+### API-key retry policy updated November 15, 2026
+
+On HTTP 429, the shared client waits 10 seconds and retries the same API key once.
+If that retry also returns 429, it switches to the next key and wraps to the first
+at the end of the list. Each API operation allows two complete circuits (at most
+four attempts per configured key). If all attempts fail, that operation raises an
+error and the evaluation records a failed row; subsequent rows can try keys again.
+Keys are no longer permanently marked exhausted for the process. This applies to
+both evaluation and the app, and to generation and embedding calls. Evaluation
+still disables model fallback. Logs retain each provider attempt, and operation
+latency includes the retry waits. A 10-second wait cannot guarantee recovery from
+long-lived quota exhaustion. Do not present failed rows as completed repetitions.
+
+
+### Score explanations required as of November 15, 2026
+
+Every newly generated score below 10 requires a `score_explanation` stating a supported
+gap and how to improve it. The UI shows it as an additional "Why X/10" item in
+"What to work on", alongside existing weakness bullets. Empty/missing explanations
+fail validation and use the existing one-retry flow. Rule-based low scores and scoring
+ceilings also supply explanations. This shared prompt/schema change applies equally
+to v3 and v4; archived results are unchanged and should not be pooled with new runs
+without disclosing the changed report contract. Validation enforces presence; human
+review still checks whether the explanation is accurate and useful.

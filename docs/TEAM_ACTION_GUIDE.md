@@ -201,3 +201,17 @@ Use one slide titled **Does explicit task decomposition improve feedback?** Show
 In the written report, use a short subsection with the hypothesis, exact change, frozen case selection, five-repeat protocol, results table, and interpretation. Link the run ID and prompt text in an appendix. Add one observed evidence/actionability failure if recall passes it. This comparison supports both structured prompting and the repeated-costed comparison requirement, but does not replace the 20-input coverage requirement or the six cost/value sections. A higher score is not necessary: a well-documented null or negative finding is valid.
 
 Do not deploy v4 just because it is newer. After reviewing the evidence, separately record the chosen app version and justification. If more prompt changes are made after these results, create a new version and disclose that the evaluation informed it.
+
+
+### API-key retry policy updated November 15, 2026
+
+On HTTP 429, the shared client waits 10 seconds and retries the same API key once.
+If that retry also returns 429, it switches to the next key and wraps to the first
+at the end of the list. Each API operation allows two complete circuits (at most
+four attempts per configured key). If all attempts fail, that operation raises an
+error and the evaluation records a failed row; subsequent rows can try keys again.
+Keys are no longer permanently marked exhausted for the process. This applies to
+both evaluation and the app, and to generation and embedding calls. Evaluation
+still disables model fallback. Logs retain each provider attempt, and operation
+latency includes the retry waits. A 10-second wait cannot guarantee recovery from
+long-lived quota exhaustion. Do not present failed rows as completed repetitions.

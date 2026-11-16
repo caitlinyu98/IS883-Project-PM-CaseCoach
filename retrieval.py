@@ -1,5 +1,5 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: rubric retrieval by embedding similarity (change name to the real owner) ---
+# Jacobo: rubric retrieval by embedding similarity ---
 import json
 import os
 import numpy as np

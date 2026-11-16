@@ -1,6 +1,6 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
 # STARTER CONTENT: the team must review and rewrite the questions and prompts so they are yours.
-# --- Caitlin: versioned prompts (change name to the real owner) ---
+# Jacobo: versioned prompts ---
 
 ACTIVE_VERSION = "v2"  # v1 is kept so eval/run_eval.py can compare: --version v1 vs --version v2
 

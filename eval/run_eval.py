@@ -97,7 +97,7 @@ def main():
     manifest=dict(python=sys.version,packages={p:package_version(p) for p in ['google-genai','pydantic','numpy','streamlit']},run_id=run_id,created=datetime.now(timezone.utc).isoformat(),dataset_sha256=digest(args.dataset),
         source_hashes=hashes,commit=commit,taxonomy_version='ten_weaknesses_2026-11-14',weakness_tags=sorted(TAGS),model=args.model,prompt=args.versions[0] if len(args.versions)==1 else 'comparison',versions=args.versions,
         feedback_prompts={v:FEEDBACK_PROMPTS[v] for v in args.versions},followup_prompt=FOLLOWUP_PROMPTS['v3'],temperature=.3,rubric_k=1,
-        fallback=False,seed=args.seed,repeats=args.repeats,modes=args.modes,selected_ids=[c['id'] for c in cases],
+        fallback=False,rate_limit_policy=dict(same_key_wait_seconds=10,key_circuits_per_request=2),seed=args.seed,repeats=args.repeats,modes=args.modes,selected_ids=[c['id'] for c in cases],
         final=args.final,primary_metric='weakness_tag_recall',unit=data.get('unit','single_answer_report'),
         note='Index resets once per repetition; latency excludes between-case sleep. No automatic repair of failed rows.')
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2))

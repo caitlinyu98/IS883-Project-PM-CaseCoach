@@ -1,5 +1,4 @@
-# Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: weakness taxonomy, structured report, validation, parse fallback (change name to the real owner) ---
+# Max: weakness taxonomy, structured report, validation, parse fallback 
 from typing import Callable, Optional
 from pydantic import ValidationError
 import os
@@ -32,7 +31,13 @@ SCORE_RUBRIC = (
     "7-8 = covers all four with minor gaps\n"
     "9 = covers all four with specific, quantified reasoning, but one minor gap remains\n"
     "10 = covers all four with specific, quantified, well prioritized reasoning and no weakness tag applies.\n"
-    "If your weaknesses list is empty, the score should be 10 unless you can name the minor gap."
+    "If your weaknesses list is empty, the score should be 10 unless you can name the minor gap.\n"
+    "For EVERY score below 10, populate score_explanation with the specific unresolved gap, "
+    "evidence from the answer (or a clearly identified omission), and what would improve it. "
+    "This explanation appears in What to work on in addition to weakness bullets. "
+    "Do not merely restate the score or say there is room for improvement. "
+    "If no supported gap exists, award 10 rather than invent a reason. "
+    "For 10, set score_explanation to an empty string."
 )
 
 
@@ -77,7 +82,7 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True,
                 formatting_failures=0)
     if len(_answers_only(transcript).split()) < MIN_WORDS:
         meta["rule_based"] = True
-        return {"meta": meta, "report": dict(overall_score=1,
+        return {"meta": meta, "report": dict(overall_score=1, score_explanation="The submitted answers contain fewer than five words in total and do not demonstrate the requested reasoning. Provide a substantive answer to the question.",
             overall_summary="Score: 1/10. The submitted answers are too short to demonstrate the requested reasoning.", strengths=[],
             weaknesses=[dict(tag="empty_or_too_short", evidence="Fewer than five answer words.",
                             fix="Answer the question with your reasoning.")], next_steps=["Try again."])}
@@ -104,7 +109,7 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True,
     off_topic = dict(tag="off_topic", evidence="; ".join(f"Question {x['index']+1}: {x['reason']}" for x in excluded),
                      fix="Answer the specific question asked, then request feedback again.")
     if len(excluded) == len(transcript):
-        return {"meta":meta, "report":dict(overall_score=1,
+        return {"meta":meta, "report":dict(overall_score=1, score_explanation=off_topic["evidence"] + ". Answer the original questions to demonstrate the required reasoning.",
             overall_summary="Score: 1/10. The submitted answers address different questions and do not answer the interview tasks.", strengths=[],
             weaknesses=[off_topic], next_steps=["Try again using the original question."])}
     text = transcript_to_text(transcript)  # include every submission, including off-topic and short answers
@@ -156,6 +161,10 @@ def generate_report(transcript, version=ACTIVE_VERSION, use_retrieval=True,
                     ceiling = max(1, int((10 * (len(transcript)-len(deficient_indices)) + len(deficient_indices)) / len(transcript) + .5))
                     meta["score_ceiling"] = ceiling
                     report["overall_score"] = min(report["overall_score"], ceiling)
+                    cap_reason = ("Question(s) " + ", ".join(str(i+1) for i in sorted(deficient_indices)) +
+                                  f" remain off-topic or insufficient, limiting the overall score to at most {ceiling}/10. "
+                                  "Answer those questions directly with sufficient detail.")
+                    report["score_explanation"] = cap_reason + (" " + report["score_explanation"] if report["score_explanation"] else "")
                     report["overall_summary"] = "Score includes all submitted answers, including unresolved off-topic or insufficient answers. " + report["overall_summary"]
                 if any(x["status"] == "partial" for x in relevance):
                     report["next_steps"] = ["Clarify how partially relevant answers address the question."] + report["next_steps"][:2]
