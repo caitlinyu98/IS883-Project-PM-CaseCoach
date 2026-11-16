@@ -1,0 +1,32 @@
+{
+  "values": {
+  "users": 200,
+  "sessions_per_user_year": 6,
+  "hosting_monthly": 25,
+  "storage_monthly": 0,
+  "other_monthly": 0,
+  "maintenance_hours_monthly": 2,
+  "maintenance_hourly_rate": 30,
+  "build_hours": 40,
+  "build_hourly_rate": 30,
+  "minutes_saved": 10,
+  "time_value_hourly": 20,
+  "index_builds_year": 0,
+  "index_build_cost": 0
+},
+  "sources": {
+    "users": "team discussion and planning assumption",
+    "sessions_per_user_year": "team discussion and planning assumption",
+    "hosting_monthly": "team discussion and planning assumption",
+    "storage_monthly": "team discussion and planning assumption",
+    "other_monthly": "team discussion and planning assumption",
+    "maintenance_hours_monthly": "team discussion and planning assumption",
+    "maintenance_hourly_rate": "team discussion and planning assumption",
+    "build_hours": "team discussion and planning assumption",
+    "build_hourly_rate": "team discussion and planning assumption",
+    "minutes_saved": "team discussion and planning assumption",
+    "time_value_hourly": "team discussion and planning assumption",
+    "index_builds_year": "team discussion and planning assumption",
+    "index_build_cost": "team discussion and planning assumption"
+  }
+}

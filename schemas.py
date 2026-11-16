@@ -1,13 +1,14 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: structured output schema for the feedback report (ported from starter-scaffold) ---
+# Jacobo: structured output schema for the feedback report ---
 #
 # Gemini is given this schema (response_schema) so it must answer in exactly this shape.
 # Our code then validates the answer against the same schema: if it does not fit,
 # feedback.py retries once and then shows the "could not format" message.
-# The tag names are the 7 tags fixed in our workshop checkpoint; eval/run_eval.py scores against them.
+# Expanded from seven to ten weaknesses on November 14, 2026, before corrected evaluation.
+# Recall remains the primary workshop metric; historical seven-tag results are not directly comparable.
 
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 Tag = Literal[
     "no_success_metric",
@@ -17,6 +18,9 @@ Tag = Literal[
     "no_tradeoffs_or_risks",
     "off_topic",
     "empty_or_too_short",
+    "no_business_impact",
+    "vague_solution",
+    "unstructured",
 ]
 
 
@@ -27,8 +31,32 @@ class Weakness(BaseModel):
 
 
 class FeedbackReport(BaseModel):
-    overall_score: int = Field(description="Overall answer quality, integer 1 to 10")
+    model_config = ConfigDict(strict=True)
+    overall_score: int = Field(ge=1, le=10, description="Overall interview score 1 to 10, including off-topic and insufficient answers")
     overall_summary: str
+    score_explanation: str = Field(description="For scores below 10, identify the specific remaining gap, its evidence, and how to improve. Empty string for 10.")
     strengths: list[str]
     weaknesses: list[Weakness]
     next_steps: list[str]
+
+
+    @model_validator(mode="after")
+    def require_score_explanation(self):
+        self.score_explanation = self.score_explanation.strip()
+        if self.overall_score < 10 and not self.score_explanation:
+            raise ValueError("A score below 10 requires an explicit score_explanation")
+        return self
+
+
+class RelevanceItem(BaseModel):
+    index: int
+    status: Literal["relevant", "partial", "off_topic"]
+    reason: str
+
+class RelevanceResult(BaseModel):
+    items: list[RelevanceItem]
+
+class FollowupResult(BaseModel):
+    model_config = ConfigDict(strict=True)
+    in_scope: bool
+    follow_up: str

@@ -1,14 +1,16 @@
 # Written with Claude (Anthropic) as coding assistant. Log the exchange in the GenAI appendix.
-# --- Caitlin: Gemini client, JSON parsing, embeddings (change name to the real owner) ---
+# Caitlin: Gemini client, JSON parsing, embeddings 
 import json
 import os
 import threading
+import time
+from telemetry import measured
 from typing import Callable, Optional
 from google import genai
 from google.genai import types
 
 # The remaining models are tried in order when the selected model returns HTTP 503.
-GEN_MODEL = "gemini-3.5-flash-lite"
+GEN_MODEL = os.environ.get("CASECOACH_MODEL", "gemini-3.5-flash-lite")
 GENERATION_MODELS = (
     GEN_MODEL,
     "gemini-3.1-flash-lite",
@@ -20,7 +22,7 @@ GENERATION_MODELS = (
     "gemini-2.5-pro",
 )
 TIMEOUT_MS = 60_000  # an API call that hangs longer than this becomes an LLMError (ported from starter-scaffold)
-EMBED_MODEL = "gemini-embedding-001"
+EMBED_MODEL = os.environ.get("CASECOACH_EMBED_MODEL", "gemini-embedding-001")
 
 
 class LLMError(Exception):
@@ -106,14 +108,17 @@ def _call_with_failover(
     request, models, on_model_status: Optional[Callable[[str], None]] = None
 ):
     global _active_key_index
+    if os.environ.get("CASECOACH_DISABLE_FALLBACK") == "1":
+        models = models[:1]
     keys = _get_api_keys()
     model_index = 0
     retry_note = None
+    same_key_retried = False
+    exhausted_visits = 0
+    max_visits = 2 * len(keys)  # two circuits per request, two attempts per key visit
+    with _state_lock:
+        key_index = _active_key_index % len(keys)
     while True:
-        with _state_lock:
-            if _active_key_index >= len(keys):
-                raise LLMError("All configured Gemini API keys are quota-exhausted.")
-            key_index = _active_key_index
         model = models[model_index]
         next_model = models[model_index + 1] if model_index + 1 < len(models) else None
         if on_model_status:
@@ -127,39 +132,43 @@ def _call_with_failover(
             message += f" An attempt can take up to {TIMEOUT_MS // 1000} seconds."
             on_model_status(message)
         try:
-            result = request(_get_client(keys[key_index]), model)
+            result = measured(request, _get_client(keys[key_index]), model)
         except LLMError:
             raise
         except Exception as e:
             code = _status_code(e)
             if code == 429:
-                with _state_lock:
-                    _active_key_index = max(_active_key_index, key_index + 1)
-                    has_another_key = _active_key_index < len(keys)
-                if has_another_key:
-                    retry_note = (
-                        f"Quota limit reached for this project (429). "
-                        f"Retrying {model} with the next configured project key."
-                    )
+                if not same_key_retried:
+                    same_key_retried = True
+                    if on_model_status:
+                        on_model_status("Rate limit (429): waiting 10 seconds before retrying the same API key.")
+                    time.sleep(10)
+                    retry_note = "Retrying the same API key after a 10-second wait."
                     continue
-                if on_model_status:
-                    on_model_status(
-                        "The project quota is exhausted, and no additional project keys are configured."
-                    )
-                message = f"All configured Gemini API keys are quota-exhausted: {e}"
-                raise LLMError(message) from e
+                exhausted_visits += 1
+                same_key_retried = False
+                key_index = (key_index + 1) % len(keys)
+                with _state_lock:
+                    _active_key_index = key_index
+                if exhausted_visits >= max_visits:
+                    raise LLMError("Rate-limit retry budget exhausted after two circuits of the API-key list.") from e
+                retry_note = "Repeated rate limit (429): moving to the next API key, wrapping to the first when needed."
+                continue
             if code == 503 and model_index + 1 < len(models):
                 next_model = models[model_index + 1]
                 retry_note = (
                     f"{model} is temporarily unavailable (503). Switching to {next_model}."
                 )
                 model_index += 1
+                same_key_retried = False
                 continue
             if code == 503 and on_model_status:
                 on_model_status(
                     f"{model} is temporarily unavailable (503), and no fallback models remain."
                 )
             raise LLMError(str(e)) from e
+        with _state_lock:
+            _active_key_index = key_index
         if on_model_status:
             on_model_status(f"Response received from {model}.")
         return result
@@ -200,7 +209,7 @@ def generate_json(
                     response_mime_type="application/json",
                     response_schema=schema,
                 ),
-            ).text,
+            ),
             GENERATION_MODELS,
             on_model_status,
         )
@@ -208,7 +217,7 @@ def generate_json(
         raise
     except Exception as e:
         raise LLMError(str(e)) from e
-    return parse_json(text)
+    return parse_json(text.text)
 
 
 # --- Caitlin: tool turn of the report conversation (written with Claude Code as coding assistant) ---
@@ -271,16 +280,20 @@ def run_tool_turn(
     return [task, model_turn, types.Content(role="user", parts=replies)]
 
 
+def generate_with_tools(system, user, tools, temperature=0.3, on_model_status=None):
+    response = _call_with_failover(
+        lambda client, model: client.models.generate_content(
+            model=model, contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system, temperature=temperature, tools=tools,
+                tool_config=types.ToolConfig(function_calling_config=types.FunctionCallingConfig(mode="ANY")),
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True))),
+        GENERATION_MODELS, on_model_status)
+    return response.function_calls or []
+
+
 def embed(texts):
-    try:
-        return _call_with_failover(
-            lambda client, model: [
-                e.values
-                for e in client.models.embed_content(model=model, contents=texts).embeddings
-            ],
-            (EMBED_MODEL,),
-        )
-    except LLMError:
-        raise
-    except Exception as e:
-        raise LLMError(str(e)) from e
+    response = _call_with_failover(
+        lambda client, model: client.models.embed_content(model=model, contents=texts),
+        (EMBED_MODEL,))
+    return [e.values for e in response.embeddings]
